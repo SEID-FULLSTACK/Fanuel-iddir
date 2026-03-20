@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ፋኑኤል ሳይት ፓርሴል1 ህብረት ለአንድነት መረዳጃ ዕድር</title>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJMcWkt_uzdgzPCvmHgXR3jBouxPYxUmE",
+            authDomain: "fanuel-iddirs.firebaseapp.com",
+            databaseURL: "https://fanuel-iddirs-default-rtdb.firebaseio.com",
+            projectId: "fanuel-iddirs",
+            storageBucket: "fanuel-iddirs.firebasestorage.app",
+            messagingSenderId: "548992768062",
+            appId: "1:548992768062:web:f7082c8fdf84b09d7e996f",
+            measurementId: "G-NTH4MRWFY1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.fb = { db, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, setDoc, getDoc };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root { --primary: #2d5a27; --secondary: #800080; --bg: #f4f7f6; --danger: #e74c3c; --warning: #f1c40f; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', 'Abyssinica SIL', sans-serif; }
+        body { margin: 0; background: var(--bg); padding-top: 60px; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { 
+            background: var(--primary); color: white; padding: 10px 15px; display: flex; 
+            justify-content: space-between; align-items: center; position: fixed; 
+            top: 0; width: 100%; z-index: 2000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .hamburger { font-size: 24px; cursor: pointer; user-select: none; }
+        
+        #side-menu {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            z-index: 3000; transition: 0.3s; padding-top: 20px;
+        }
+        #side-menu.open { left: 0; }
+        .menu-item { 
+            padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; 
+            display: flex; align-items: center; gap: 15px; color: #333; font-weight: 500;
+        }
+        .menu-item:hover { background: #f9f9f9; }
+        .overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); z-index: 2500; 
+        }
+        .overlay.active { display: block; }
+
+        .container { padding: 15px; max-width: 900px; margin: auto; flex: 1; width: 100%; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .hidden { display: none !important; }
+        
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1.5px solid #ddd; border-radius: 10px; margin-bottom: 10px; font-size: 16px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
+        .btn-primary { background: var(--primary); }
+        .btn-danger { background: var(--danger); }
+        .btn-info { background: #800080; }
+        .btn-success { background: #28a745; }
+        
+        input:disabled, select:disabled { background-color: #f0f0f0; cursor: not-allowed; color: #666; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--primary); position: fixed; width: 100%; top: 0; z-index: 4000; }
+        .login-card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-item { padding: 15px; border-radius: 10px; color: white; text-align: center; font-weight: bold; }
+
+        footer {position: fixed; background: #5408ec; padding: 20px;margin: 0;bottom: 0;left: 0;width: 100%; text-align: center; color: white; margin-top: auto; font-size: 12px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div id="side-menu">
+        <div style="padding: 20px; background: var(--primary); color: white; margin-top: -20px; margin-bottom: 10px;">
+            <h3 id="m-user-display">Menu</h3>
+        </div>
+        <div class="menu-item" onclick="navTo('dash')" data-key="dash">🏠 ዳሽቦርድ</div>
+        <div class="menu-item" onclick="navTo('list')" data-key="list">📋 የአባላት ዝርዝር</div>
+        <div class="menu-item" id="nav-reg-box" onclick="navTo('reg')" data-key="reg">👤 አዲስ አባል</div>
+        <div class="menu-item" id="nav-pay-box" onclick="navTo('pay')" data-key="pay">💳 ክፍያ</div>
+        <div class="menu-item" id="nav-fin-box" onclick="navTo('fin')" data-key="fin">📊 ገቢ/ወጪ</div>
+        <div class="menu-item" onclick="navTo('workflow')" data-key="appr">🔔 ፍቃድ</div>
+        <div class="menu-item" onclick="navTo('settings')" data-key="sett">⚙️ ሴቲንግ</div>
+        <div class="menu-item" onclick="location.reload()" style="color: var(--danger); border-top: 2px solid #eee;" data-key="logout">ውጣ (Logout)</div>
+    </div>
+
+    <div id="login-screen">
+        <div class="login-card" id="login-form-box">
+            <h2>ፋኑኤል ሳይት ፓርሴል1 መረዳጃ ዕድር</h2>
+            <input type="text" id="login-id" placeholder="User ID">
+            <input type="password" id="login-pin" placeholder="PIN">
+            <button class="btn btn-primary" onclick="handleLogin()" id="l-btn">ግባ / Login</button>
+            <p style="margin-top:15px; color:var(--primary); cursor:pointer; font-weight:bold;" onclick="toggleResetBox(true)">PIN ረሳሁ? (Forgot PIN?)</p>
+        </div>
+
+        <div class="login-card hidden" id="reset-form-box">
+            <h3>PIN መቀየሪያ</h3>
+            <p style="font-size:12px; color:#666;">የመዝገብ መለያ ቁጥርዎን እና የተመዘገበ ስልክዎን ያስገቡ</p>
+            <input type="text" id="reset-id" placeholder="User ID">
+            <input type="tel" id="reset-phone" placeholder="የተመዘገበ ስልክ ቁጥር">
+            <input type="password" id="reset-new-pin" placeholder="አዲስ PIN (4+ ድጂት)">
+            <button class="btn btn-info" onclick="handleResetPIN()">PIN ቀይር</button>
+            <button class="btn btn-danger" onclick="toggleResetBox(false)">ተመለስ</button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <header>
+            <div class="hamburger" onclick="toggleMenu()">☰</div>
+            <strong>ፋኑኤል ሳይት ፓርሴል1 መረዳጃ ዕድር</strong>
+            <select id="lang-select" onchange="changeLanguage()" style="margin:0; width: auto; padding: 5px;">
+                <option value="am">አማርኛ</option>
+                <option value="en">English</option>
+            </select>
+        </header>
+
+        <div class="container">
+            <div id="sec-dash" class="content">
+                <div class="stats-grid">
+                    <div class="stat-item" style="background: #17a2b8;"><span data-key="totalM">አባላት</span><br><span id="total-m">0</span></div>
+                    <div class="stat-item" style="background: #10da96;"><span data-key="totalInc">ገቢ (ETB)</span><br><span id="total-inc">0</span></div>
+                    <div class="stat-item" style="background: #dc8b35;"><span data-key="totalExp">ወጪ (ETB)</span><br><span id="total-exp">0</span></div>
+                    <div class="stat-item" style="background: #28a745;"><span data-key="netBal">ቀሪ (ETB)</span><br><span id="net-bal">0</span></div>
+                </div>
+                <div class="card">
+                    <canvas id="paymentChart" style="max-height: 250px;"></canvas>
+                </div>
+                <div class="card" style="display: flex; gap: 10px;">
+                    <button class="btn btn-info" onclick="generatePDF()" data-key="pdfBtn">PDF Report</button>
+                    <button class="btn btn-success" onclick="exportToCSV()" data-key="csvBtn">Export Excel (CSV)</button>
+                </div>
+            </div>
+
+            <div id="sec-list" class="content hidden">
+                <div class="card">
+                    <h3 data-key="listTitle">📋 የአባላት ዝርዝር</h3>
+                    <input type="text" id="m-search" class="search-box" placeholder="አባል በስም ፈልግ..." onkeyup="filterMembers()">
+                    <div style="overflow-x: auto;">
+                        <table id="m-table">
+                            <thead><tr><th data-key="thName">ስም</th><th data-key="thStatus">ሁኔታ</th><th class="admin-only" data-key="thAction">ድርጊት</th></tr></thead>
+                            <tbody id="member-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-reg" class="content hidden">
+                <div class="card">
+                    <h3 data-key="regTitle">👤 አዲስ አባል ምዝገባ</h3>
+                    <input type="text" id="m-husband-name" placeholder="የባል ስም">
+                    <input type="text" id="m-wife-name" placeholder="የሚስት ስም">
+                    <input type="tel" id="m-phone" placeholder="ስልክ ቁጥር">
+                    <button class="btn btn-primary" onclick="saveMember()" data-key="saveBtn">መዝግብ</button>
+                </div>
+            </div>
+
+            <div id="sec-pay" class="content hidden">
+                <div class="card">
+                    <h3 data-key="payTitle">💳 ክፍያ መመዝገቢያ</h3>
+                    <select id="p-member-select"></select>
+                    <select id="p-year">
+                        <option>2018</option><option>2019</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option>
+                        <option>2024</option><option>2025</option><option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option>
+                    </select>
+                    <select id="p-month">
+                        <option value="መስከረም">መስከረም</option><option value="ጥቅምት">ጥቅምት</option><option value="ህዳር">ህዳር</option><option value="ታህሳስ">ታህሳስ</option>
+                        <option value="ጥር">ጥር</option><option value="የካቲት">የካቲት</option><option value="መጋቢት">መጋቢት</option><option value="ሚያዝያ">ሚያዝያ</option>
+                        <option value="ግንቦት">ግንቦት</option><option value="ሰኔ">ሰኔ</option><option value="ሐምሌ">ሐምሌ</option><option value="ነሐሴ">ነሐሴ</option>
+                    </select>
+                    <input type="number" id="p-amount" value="100">
+                    <button class="btn btn-primary" onclick="processPayment()" data-key="payBtnAction">ክፍያ አዘምን</button>
+                </div>
+            </div>
+
+            <div id="sec-fin" class="content hidden">
+                <div class="card">
+                    <h3 data-key="finTitle">📊 ገቢና ወጪ</h3>
+                    <select id="f-type">
+                        <option value="income" data-key="optInc">ገቢ</option>
+                        <option value="expense" data-key="optExp">ወጪ</option>
+                    </select>
+                    <input type="number" id="f-amt" placeholder="ብር መጠን">
+                    <input type="text" id="f-reason" placeholder="ምክንያት">
+                    <button class="btn btn-primary" onclick="addFinance()" data-key="finBtn">ለኦዲት ላክ (Submit)</button>
+                </div>
+            </div>
+
+            <div id="sec-workflow" class="content hidden">
+                <div class="card">
+                    <h3 data-key="apprTitle">🔔 የፍቃድ ሰንሰለት (Approvals)</h3>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead><tr><th data-key="thReason">ምክንያት</th><th data-key="thAmt">መጠን</th><th data-key="thStat">ሁኔታ</th><th data-key="thAct">ድርጊት</th></tr></thead>
+                            <tbody id="workflow-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-settings" class="content hidden">
+                <div class="card">
+                    <h3 data-key="settTitle">⚙️ ማስተካከያ (PIN)</h3>
+                    <p style="font-size: 14px; color: #2d5a27; font-weight: bold;">የእርስዎን ሚስጥር ቁጥር እዚህ መቀየር ይችላሉ።</p>
+                    <input type="password" id="new-pin" placeholder="New PIN">
+                    <button class="btn btn-primary" id="pin-change-btn" onclick="changePIN()" data-key="pinBtn">ቀይር</button>
+                </div>
+            </div>
+        </div>
+<div id="edit-modal" class="overlay" style="display:none; justify-content: center; align-items: center; z-index: 5000;">
+    <div class="card" style="width: 90%; max-width: 400px; margin-top: 100px;">
+        <h3>✏️ አባል ማስተካከያ</h3>
+        <input type="hidden" id="edit-id">
+        <label>የባል ስም</label><input type="text" id="edit-hName">
+        <label>የሚስት ስም</label><input type="text" id="edit-wName">
+        <label>ስልክ</label><input type="tel" id="edit-phone">
+        <button class="btn btn-success" onclick="updateMember()">አዘምን (Update)</button>
+        <button class="btn btn-danger" onclick="closeEditModal()">ተመለስ</button>
+    </div>
+</div>
+        <footer>
+            <div> © 2018 አ.ም ፋኑኤል ሳይትፓርሴል 1 መረዳጃ ዕድር።<br>© መብቱ በህግ የተጠበቀ ነው።<br>Developed By Horizon Web Tech(Seid Firew)</div>
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            am: {
+                brand: "ፋኑኤል ዕድር", dash: "🏠 ዳሽቦርድ", list: "📋 የአባላት ዝርዝር", reg: "👤 አዲስ አባል", pay: "💳 ክፍያ", fin: "📊 ገቢ/ወጪ", appr: "🔔 ፍቃድ", sett: "⚙️ ሴቲንግ", logout: "ውጣ (Logout)",
+                totalM: "አባላት", totalInc: "ገቢ (ETB)", totalExp: "ወጪ (ETB)", netBal: "ቀሪ (ETB)", pdfBtn: "ሪፖርት (PDF)", csvBtn: "ኤክሴል (CSV)",
+                listTitle: "📋 የአባላት ዝርዝር", searchPl: "አባል በስም ፈልግ...", thName: "ስም", thStatus: "ሁኔታ", thAction: "ድርጊት",
+                regTitle: "👤 አዲስ አባል ምዝገባ", husband: "የባል ስም", wife: "የሚስት ስም", phone: "ስልክ ቁጥር", saveBtn: "መዝግብ",
+                payTitle: "💳 ክፍያ መመዝገቢያ", payBtnAction: "ክፍያ አዘምን", finTitle: "📊 ገቢና ወጪ", optInc: "ገቢ", optExp: "ወጪ", amount: "ብር መጠን", reason: "ምክንያት", finBtn: "ለኦዲት ላክ",
+                apprTitle: "🔔 የፍቃድ ሰንሰለት", thReason: "ምክንያት", thAmt: "መጠን", thStat: "ሁኔታ", thAct: "ድርጊት", settTitle: "⚙️ ማስተካከያ (PIN)", pinBtn: "ቀይር"
+            },
+            en: {
+                brand: "Fanuel Iddir", dash: "🏠 Dashboard", list: "📋 Member List", reg: "👤 Register", pay: "💳 Payment", fin: "📊 Finance", appr: "🔔 Approvals", sett: "⚙️ Settings", logout: "Logout",
+                totalM: "Members", totalInc: "Income (ETB)", totalExp: "Expense (ETB)", netBal: "Balance (ETB)", pdfBtn: "PDF Report", csvBtn: "Excel (CSV)",
+                listTitle: "📋 Member Directory", searchPl: "Search by name...", thName: "Name", thStatus: "Status", thAction: "Action",
+                regTitle: "👤 New Member Registration", husband: "Husband Name", wife: "Wife Name", phone: "Phone Number", saveBtn: "Register",
+                payTitle: "💳 Record Payment", payBtnAction: "Update Payment", finTitle: "📊 Income & Expense", optInc: "Income", optExp: "Expense", amount: "Amount", reason: "Reason", finBtn: "Submit to Audit",
+                apprTitle: "🔔 Approval Workflow", thReason: "Reason", thAmt: "Amt", thStat: "Status", thAct: "Action", settTitle: "⚙️ Account Settings", pinBtn: "Change PIN"
+            }
+        };
+
+        const defaultUsers = {
+            "admin": { pin: "1111", role: "chairman", phone: "0911223344" },
+            "secretary": { pin: "2222", role: "secretary", phone: "0900000001" },
+            "finance": { pin: "3333", role: "finance", phone: "0900000002" },
+            "audit1": { pin: "4444", role: "auditor", phone: "0900000003" },
+            "audit2": { pin: "5555", role: "auditor", phone: "0900000004" }
+        };
+
+        let currentUser = null;
+        let dbData = { members: [], finance: [], workflow: [] };
+        let myChart = null;
+
+        // --- PASSWORD RESET LOGIC ---
+        window.toggleResetBox = function(show) {
+            document.getElementById('login-form-box').classList.toggle('hidden', show);
+            document.getElementById('reset-form-box').classList.toggle('hidden', !show);
+        };
+
+        window.handleResetPIN = async function() {
+            const id = document.getElementById('reset-id').value;
+            const phone = document.getElementById('reset-phone').value;
+            const newPin = document.getElementById('reset-new-pin').value;
+
+            if(!id || !phone || newPin.length < 4) return alert("እባክዎ መለያ፣ ስልክ እና 4+ ዲጂት PIN ያስገቡ");
+
+            if(defaultUsers[id] && defaultUsers[id].phone === phone) {
+                try {
+                    await window.fb.setDoc(window.fb.doc(window.fb.db, "users", id), { pin: newPin }, { merge: true });
+                    alert("PIN በስኬት ተቀይሯል! አሁን መግባት ይችላሉ።");
+                    toggleResetBox(false);
+                } catch(e) { alert("Error updating PIN"); }
+            } else {
+                alert("የተሳሳተ User ID ወይም ስልክ ቁጥር!");
+            }
+        };
+
+        window.changeLanguage = function() {
+            const lang = document.getElementById('lang-select').value;
+            const t = translations[lang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[key]) el.innerText = t[key];
+            });
+            document.getElementById('m-search').placeholder = t.searchPl;
+        };
+
+        window.handleLogin = async function() {
+            const id = document.getElementById('login-id').value;
+            const pin = document.getElementById('login-pin').value;
+            if (!defaultUsers[id]) return alert("User not found!");
+            try {
+                const userDoc = await window.fb.getDoc(window.fb.doc(window.fb.db, "users", id));
+                let validPin = userDoc.exists() ? userDoc.data().pin : defaultUsers[id].pin;
+                if (validPin === pin) {
+                    currentUser = { id, ...defaultUsers[id] };
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('main-app').classList.remove('hidden');
+                    document.getElementById('m-user-display').innerText = `Hello, ${id}`;
+                    applyPermissions(); initChart(); startSync(); showSection('dash'); window.changeLanguage();
+                } else { alert("Wrong PIN!"); }
+            } catch(e) { alert("Database Error."); }
+        };
+  function applyPermissions() {
+    const r = currentUser.role;
+    // ሜኑዎችን እንደ ሮል ማሳያ/መደበቂያ
+    document.getElementById('nav-reg-box').style.display = (r === 'chairman' || r === 'secretary') ? 'flex' : 'none';
+    document.getElementById('nav-pay-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+    document.getElementById('nav-fin-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+
+    // ሁሉንም ኢንፑቶች መጀመሪያ እናጽዳ (Enable እናድርጋቸው)
+    document.querySelectorAll('input, select, button').forEach(el => el.disabled = false);
+
+    if (r === 'chairman') {
+        // ከአንድሮይድ እና ከፒን መቀየሪያ ውጭ ያሉትን ኢንፑቶች ዝጋ
+        document.querySelectorAll('input, select').forEach(i => {
+            if (i.id !== 'lang-select' && i.id !== 'm-search' && i.id !== 'new-pin') {
+                i.disabled = true;
+            }
+        });
+
+        // አስፈላጊ የሆኑ በተኖችን ብቻ ክፍት አድርግ
+        document.querySelectorAll('button').forEach(b => {
+            const isControlBtn = b.innerText.includes('Approve') || 
+                                 b.innerText.includes('Reject') || 
+                                 b.id === 'pin-change-btn' || // አሁን በ ID ያገኘዋል
+                                 b.classList.contains('btn-info') || 
+                                 b.classList.contains('btn-success') ||
+                                 b.innerText.includes('Sign');
+            
+            if (!isControlBtn) {
+                b.disabled = true;
+            }
+        });
+    }
+}
+    function startSync() {
+            window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
+                dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); renderMembers();
+            });
+            window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
+                dbData.finance = snap.docs.map(d => d.data()); updateStats();
+            });
+            window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
+                dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); renderWorkflow();
+            });
+        }
+function renderMembers() {
+    const tbody = document.getElementById('member-table-body');
+    const pSelect = document.getElementById('p-member-select');
+    if(!tbody || !pSelect) return;
+    tbody.innerHTML = ""; pSelect.innerHTML = "";
+    
+    dbData.members.forEach(m => {
+        // ኤዲት ሲነካ መረጃው ወደ ፎርሙ እንዲላክ 'openEditModal' ይጠራል
+        const editBtn = `<button class="btn-success" style="padding:5px 10px; margin-right:5px; border-radius:5px;" 
+                         onclick="openEditModal('${m.id}', '${m.hName}', '${m.wName}', '${m.phone}')">✏️</button>`;
+        const delBtn = `<button class="btn-danger" style="padding:5px 10px; border-radius:5px;" 
+                         onclick="deleteMember('${m.id}')">🗑️</button>`;
+
+        tbody.innerHTML += `<tr>
+            <td>${m.hName}</td>
+            <td>${m.status || 'Active'}</td>
+            <td class="admin-only">${editBtn} ${delBtn}</td>
+        </tr>`;
+        
+        pSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+    });
+}
+        window.showSection = function(id) {
+            document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+        };
+
+        window.saveMember = async function() {
+            const hName = document.getElementById('m-husband-name').value;
+            if(!hName) return alert("Enter Name");
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "members"), {
+                hName, wName: document.getElementById('m-wife-name').value,
+                phone: document.getElementById('m-phone').value, status: "Active"
+            });
+            alert("Saved!");
+        };
+
+        window.processPayment = async function() {
+            const mId = document.getElementById('p-member-select').value;
+            const month = document.getElementById('p-month').value;
+            const amt = parseFloat(document.getElementById('p-amount').value);
+            const mName = document.getElementById('p-member-select').options[document.getElementById('p-member-select').selectedIndex].text;
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
+                amt, reason: `ክፍያ፡ ${mName} (${month})`, type: 'income',
+                status: "pending_audit", audit1: false, audit2: false,
+                submittedBy: currentUser.id, timestamp: new Date()
+            });
+            alert("ክፍያው ለኦዲት ተልኳል!");
+        };
+
+        window.addFinance = async function() {
+            const amt = parseFloat(document.getElementById('f-amt').value);
+            const type = document.getElementById('f-type').value;
+            const reason = document.getElementById('f-reason').value;
+            if(!amt || !reason) return alert("መረጃ ይሙሉ");
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
+                amt, reason, type, status: "pending_audit",
+                audit1: false, audit2: false, submittedBy: currentUser.id, timestamp: new Date()
+            });
+            alert("ለኦዲተሮች ተልኳል!");
+        };
+
+        window.auditSign = async function(id) {
+            const docRef = window.fb.doc(window.fb.db, "workflow", id);
+            const update = {};
+            if(currentUser.id === 'audit1') update.audit1 = true;
+            else if(currentUser.id === 'audit2') update.audit2 = true;
+            await window.fb.updateDoc(docRef, update);
+            const snap = await window.fb.getDoc(docRef);
+            if(snap.data().audit1 && snap.data().audit2) await window.fb.updateDoc(docRef, { status: "pending_chairman" });
+            alert("ተፈርሟል!");
+        };
+
+        window.finalApprove = async function(id) {
+            const docRef = window.fb.doc(window.fb.db, "workflow", id);
+            const snap = await window.fb.getDoc(docRef);
+            const data = snap.data();
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
+                amt: data.amt, reason: data.reason, type: data.type, date: new Date().toLocaleDateString()
+            });
+            await window.fb.deleteDoc(docRef);
+            alert("ጸድቋል!");
+        };
+
+        window.rejectWorkflow = async function(id) {
+            if(confirm("ይህንን መረጃ ውድቅ (Reject) ማድረግ ይፈልጋሉ?")) {
+                const docRef = window.fb.doc(window.fb.db, "workflow", id);
+                await window.fb.updateDoc(docRef, { 
+                    status: "Rejected",
+                    rejectedBy: currentUser.id,
+                    rejectDate: new Date().toLocaleDateString()
+                });
+                alert("መረጃው ውድቅ ተደርጓል!");
+            }
+        };
+
+        function renderWorkflow() {
+            const tbody = document.getElementById('workflow-table-body');
+            tbody.innerHTML = "";
+            dbData.workflow.forEach(w => {
+                let actionBtn = "";
+                if(w.status === 'pending_audit' && currentUser.role === 'auditor') {
+                    actionBtn = `<button class="btn btn-primary" style="padding:5px 10px; font-size:11px;" onclick="auditSign('${w.id}')">Sign</button>`;
+                }
+                if(w.status === 'pending_chairman' && currentUser.role === 'chairman') {
+                    actionBtn = `
+                        <button class="btn btn-info" style="padding:5px 10px; font-size:11px; margin-bottom:2px;" onclick="finalApprove('${w.id}')">Approve</button>
+                        <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="rejectWorkflow('${w.id}')">Reject</button>
+                    `;
+                }
+                const statusDisplay = w.status === 'Rejected' ? `<span style="color:red; font-weight:bold;">Rejected</span>` : w.status;
+                tbody.innerHTML += `<tr><td>${w.reason}</td><td>${w.amt}</td><td>${statusDisplay}</td><td>${actionBtn}</td></tr>`;
+            });
+        }
+
+        function updateStats() {
+            const inc = dbData.finance.filter(f => f.type === 'income').reduce((s, a) => s + parseFloat(a.amt || 0), 0);
+            const exp = dbData.finance.filter(f => f.type === 'expense').reduce((s, a) => s + parseFloat(a.amt || 0), 0);
+            document.getElementById('total-m').innerText = dbData.members.length;
+            document.getElementById('total-inc').innerText = inc.toLocaleString();
+            document.getElementById('total-exp').innerText = exp.toLocaleString();
+            document.getElementById('net-bal').innerText = (inc - exp).toLocaleString();
+            if(myChart) { myChart.data.datasets[0].data = [inc, exp]; myChart.update(); }
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('paymentChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['ገቢ', 'ወጪ'], datasets: [{ data: [0, 0], backgroundColor: ['#28a745', '#e74c3c'] }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
+        function navTo(secId) { showSection(secId); toggleMenu(); }
+        function filterMembers() {
+            const input = document.getElementById('m-search').value.toLowerCase();
+            document.querySelectorAll('#member-table-body tr').forEach(row => { row.style.display = row.cells[0].innerText.toLowerCase().includes(input) ? '' : 'none'; });
+        }
+    
+window.exportToCSV = function() {
+    if (dbData.finance.length === 0) {
+        return alert("ምንም አይነት የፋይናንስ መረጃ የለም!");
+    }
+
+    // የሪፖርቱ ርዕሶች (Headers)
+    const headers = ["Date", "Reason", "Name", "Type", "Amount", "Approved By"];
+    
+    // ዳታውን ወደ CSV ረድፎች መቀየር
+    const rows = dbData.finance.map(f => [
+        f.date || "-",
+        `"${f.reason || '-'}"`, // ምክንያቱ ውስጥ ኮማ ቢኖር እንዳይበላሽ በኩቴሽን
+        f.name || "-",
+        f.type || "-",
+        f.amt || 0,
+        f.approvedBy || "System"
+    ]);
+
+    // የCSV ይዘቱን ማዘጋጀት
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF" // \uFEFF ለአማርኛ ዩኒኮድ ድጋፍ
+        + headers.join(",") + "\n" 
+        + rows.map(e => e.join(",")).join("\n");
+
+    // ፋይሉን እንዲወርድ ማድረግ
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Fanuel_Iddir_Report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+window.generatePDF = function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    doc.text("Fanuel Iddir Financial Report", 14, 15);
+    
+    // አዲሶቹን 6 ኮለሞች ማካተት
+    const rows = dbData.finance.map(f => [
+        f.date || '-',
+        f.reason || '-',
+        f.name || '-',
+        f.type || '-',
+        (f.amt || 0) + " ETB",
+        f.approvedBy || 'System'
+    ]);
+
+    doc.autoTable({ 
+        head: [['Date', 'Reason', 'Name', 'Type', 'Amount', 'Approved By']], 
+        body: rows, 
+        startY: 20,
+        styles: { fontSize: 8 }, // ብዙ ኮለም ስለሆነ ጽሁፉን ትንሽ ማሳነስ
+        headStyles: { fillColor: [45, 90, 39] } // ካንተ ግሪን ከለር ጋር ተመሳሳይ
+    });
+    
+    doc.save("Finance_Report.pdf");
+};
+
+
+
+        window.deleteMember = async function(id) { if(confirm("ይህ አባል ይጥፋ?")) await window.fb.deleteDoc(window.fb.doc(window.fb.db, "members", id)); };
+        
+        window.changePIN = async function() {
+            const newPin = document.getElementById('new-pin').value;
+            if(newPin.length < 4) return alert("PIN must be 4+ digits");
+            await window.fb.setDoc(window.fb.doc(window.fb.db, "users", currentUser.id), { pin: newPin }, { merge: true });
+            alert("PIN Updated! Please login again."); location.reload();
+        };
+
+
+// ኤዲት ቦክሱን ለመክፈትና ዳታውን ለመሙላት
+window.openEditModal = (id, hName, wName, phone) => {
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-hName').value = hName;
+    document.getElementById('edit-wName').value = wName;
+    document.getElementById('edit-phone').value = phone;
+    document.getElementById('edit-modal').style.display = 'flex';
+};
+
+// ቦክሱን ለመዝጋት
+window.closeEditModal = () => { document.getElementById('edit-modal').style.display = 'none'; };
+
+// ዳታቤዝ ላይ ለመቀየር
+window.updateMember = async () => {
+    const id = document.getElementById('edit-id').value;
+    const ref = window.fb.doc(window.fb.db, "members", id);
+    await window.fb.updateDoc(ref, {
+        hName: document.getElementById('edit-hName').value,
+        wName: document.getElementById('edit-wName').value,
+        phone: document.getElementById('edit-phone').value
+    });
+    alert("ተስተካክሏል!");
+    closeEditModal();
+};
+
+    </script>
+</body>
+</html>

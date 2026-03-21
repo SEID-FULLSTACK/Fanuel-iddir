@@ -1,0 +1,39 @@
+{
+  "short_name": "የፋኑኤል እድር",
+  "name": "የፋኑኤል እድር ማኔጅመንት ሲስተም",
+  "icons": [
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "512x512", 
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2196f3",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "screenshot.png",
+      "sizes": "1904x848",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "የእድር አስተዳደር ገጽ ለፒሲ"
+    },
+    {
+      "src": "screenshot.png", 
+      "sizes": "1904x848",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "የእድር አስተዳደር ገጽ ለስልክ"
+    }
+  ]
+}

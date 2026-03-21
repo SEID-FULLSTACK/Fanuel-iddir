@@ -32,55 +32,71 @@
     <style>
         :root { --primary: #2d5a27; --secondary: #800080; --bg: #f4f7f6; --danger: #e74c3c; --warning: #f1c40f; }
         * { box-sizing: border-box; font-family: 'Segoe UI', 'Abyssinica SIL', sans-serif; }
-        body { margin: 0; background: var(--bg); padding-top: 60px; min-height: 100vh; display: flex; flex-direction: column; }
         
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--bg);
+        }
+
         header { 
             background: var(--primary); color: white; padding: 10px 15px; display: flex; 
             justify-content: space-between; align-items: center; position: fixed; 
             top: 0; width: 100%; z-index: 2000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .hamburger { font-size: 24px; cursor: pointer; user-select: none; }
+
+        .container { padding: 100px 15px 20px 15px; max-width: 900px; margin: auto; flex: 1; width: 100%; }
         
+        /* Fixed Footer Fix */
+        #main-app { display: flex; flex-direction: column; min-height: 100vh; flex: 1; }
+        
+        .main-footer {
+            background-color: #f4f4f4;
+            color: black;
+            padding: 10px 0;
+            text-align: center;
+            border-top: 3px solid #00563b;
+            font-size: 24px;
+            width: 100%;
+            margin-top: auto;
+  }
+.main-footer p, .main-footer div {
+            color: black;
+            margin: 2px 0;
+line-height: 1.2;
+font-size: 18px;
+        }
+        /* Menu & UI Components */
+        .hamburger { font-size: 24px; cursor: pointer; }
         #side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
             background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.2);
             z-index: 3000; transition: 0.3s; padding-top: 20px;
         }
         #side-menu.open { left: 0; }
-        .menu-item { 
-            padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; 
-            display: flex; align-items: center; gap: 15px; color: #333; font-weight: 500;
-        }
-        .menu-item:hover { background: #f9f9f9; }
-        .overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.5); z-index: 2500; 
-        }
+        .menu-item { padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #333; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2500; }
         .overlay.active { display: block; }
 
-        .container { padding: 15px; max-width: 900px; margin: auto; flex: 1; width: 100%; }
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .hidden { display: none !important; }
         
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1.5px solid #ddd; border-radius: 10px; margin-bottom: 10px; font-size: 16px; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1.5px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; }
         .btn-primary { background: var(--primary); }
+ .btn-success { background: #28a745; }
         .btn-danger { background: var(--danger); }
-        .btn-info { background: #800080; }
-        .btn-success { background: #28a745; }
-        
-        input:disabled, select:disabled { background-color: #f0f0f0; cursor: not-allowed; color: #666; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        .btn-info { background: var(--secondary); }
 
         #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--primary); position: fixed; width: 100%; top: 0; z-index: 4000; }
         .login-card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-item { padding: 15px; border-radius: 10px; color: white; text-align: center; font-weight: bold; }
-
-        footer {position: fixed; background: #5408ec; padding: 20px;margin: 0;bottom: 0;left: 0;width: 100%; text-align: center; color: white; margin-top: auto; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -94,6 +110,7 @@
         <div class="menu-item" onclick="navTo('list')" data-key="list">📋 የአባላት ዝርዝር</div>
         <div class="menu-item" id="nav-reg-box" onclick="navTo('reg')" data-key="reg">👤 አዲስ አባል</div>
         <div class="menu-item" id="nav-pay-box" onclick="navTo('pay')" data-key="pay">💳 ክፍያ</div>
+        <div class="menu-item" id="nav-pen-box" onclick="navTo('pen')" data-key="pen">⚖️ ቅጣት</div>
         <div class="menu-item" id="nav-fin-box" onclick="navTo('fin')" data-key="fin">📊 ገቢ/ወጪ</div>
         <div class="menu-item" onclick="navTo('workflow')" data-key="appr">🔔 ፍቃድ</div>
         <div class="menu-item" onclick="navTo('settings')" data-key="sett">⚙️ ሴቲንግ</div>
@@ -102,11 +119,11 @@
 
     <div id="login-screen">
         <div class="login-card" id="login-form-box">
-            <h2>ፋኑኤል ሳይት ፓርሴል1 መረዳጃ ዕድር</h2>
+            <h2 style="text-align: center; color: var(--primary);">ፋኑኤል ሳይት ፓርሴል1 መረዳጃ ዕድር</h2>
             <input type="text" id="login-id" placeholder="User ID">
             <input type="password" id="login-pin" placeholder="PIN">
             <button class="btn btn-primary" onclick="handleLogin()" id="l-btn">ግባ / Login</button>
-            <p style="margin-top:15px; color:var(--primary); cursor:pointer; font-weight:bold;" onclick="toggleResetBox(true)">PIN ረሳሁ? (Forgot PIN?)</p>
+            <p style="text-align:center; margin-top:15px; color:var(--primary); cursor:pointer; font-weight:bold;" onclick="toggleResetBox(true)">PIN ረሳሁ? (Forgot PIN?)</p>
         </div>
 
         <div class="login-card hidden" id="reset-form-box">
@@ -121,16 +138,22 @@
     </div>
 
     <div id="main-app" class="hidden">
-        <header>
-            <div class="hamburger" onclick="toggleMenu()">☰</div>
-            <strong>ፋኑኤል ሳይት ፓርሴል1 መረዳጃ ዕድር</strong>
-            <select id="lang-select" onchange="changeLanguage()" style="margin:0; width: auto; padding: 5px;">
-                <option value="am">አማርኛ</option>
-                <option value="en">English</option>
-            </select>
-        </header>
+<header class="app-header" style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #2d5a27; color: white;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="hamburger" onclick="toggleMenu()" style="font-size: 24px; cursor: pointer;">☰</div>
+        <img src="https://github.com/SEID-FULLSTACK/Fanuel-iddir/blob/main/iddir-logo.png?raw=true" alt="አርማ" class="ididir-logo" style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid white;">
+    </div>
 
-        <div class="container">
+    <div class="ididir-name" style="text-align: center; flex-grow: 1;">
+        <strong style="font-size: 16px;">ፋኑኤል ሳይት ፓርሴል 1ህብረት ለአንድነት መረዳጃ ዕድር</strong>
+    </div>
+
+    <select id="lang-select" onchange="changeLanguage()" style="margin:0; width: auto; padding: 5px; border-radius: 5px;">
+        <option value="am">አማርኛ</option>
+        <option value="en">English</option>
+    </select>
+</header>
+      <div class="container">
             <div id="sec-dash" class="content">
                 <div class="stats-grid">
                     <div class="stat-item" style="background: #17a2b8;"><span data-key="totalM">አባላት</span><br><span id="total-m">0</span></div>
@@ -138,6 +161,22 @@
                     <div class="stat-item" style="background: #dc8b35;"><span data-key="totalExp">ወጪ (ETB)</span><br><span id="total-exp">0</span></div>
                     <div class="stat-item" style="background: #28a745;"><span data-key="netBal">ቀሪ (ETB)</span><br><span id="net-bal">0</span></div>
                 </div>
+<div class="stats-grid">
+    <div class="stat-item" style="background: #ffc107; color: #333;">
+        ጥበቃ ላይ (Pending)<br>
+        <span id="stat-pending" style="font-size: 22px; font-weight: bold;">0</span>
+    </div>
+    
+    <div class="stat-item" style="background: #28a745;">
+        የጸደቁ (Approved)<br>
+        <span id="stat-approved" style="font-size: 22px; font-weight: bold;">0</span>
+    </div>
+    
+    <div class="stat-item" style="background: #dc3545;">
+        ውድቅ የተደረጉ (Rejected)<br>
+        <span id="stat-rejected" style="font-size: 22px; font-weight: bold;">0</span>
+    </div>
+</div>
                 <div class="card">
                     <canvas id="paymentChart" style="max-height: 250px;"></canvas>
                 </div>
@@ -159,16 +198,36 @@
                     </div>
                 </div>
             </div>
-
-            <div id="sec-reg" class="content hidden">
-                <div class="card">
-                    <h3 data-key="regTitle">👤 አዲስ አባል ምዝገባ</h3>
-                    <input type="text" id="m-husband-name" placeholder="የባል ስም">
-                    <input type="text" id="m-wife-name" placeholder="የሚስት ስም">
-                    <input type="tel" id="m-phone" placeholder="ስልክ ቁጥር">
-                    <button class="btn btn-primary" onclick="saveMember()" data-key="saveBtn">መዝግብ</button>
-                </div>
+<div id="global-modal" class="overlay" onclick="this.classList.remove('active')">
+    <div class="card" style="width: 90%; max-width: 450px; margin: auto; position: relative;" onclick="event.stopPropagation()">
+        <div id="modal-content">
             </div>
+        <button class="btn-danger" style="margin-top:15px;" onclick="document.getElementById('global-modal').classList.remove('active')">ዝጋ (Close)</button>
+    </div>
+</div>
+            <div id="sec-reg" class="content hidden">
+    <div class="card">
+        <h3>👤 አዲስ አባል እና የቤተሰብ ምዝገባ</h3>
+        
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;"><label>ፎቶ</label><input type="file" id="f-photo" accept="image"></div>
+            <div style="flex: 1;"><label>መታወቂያ</label><input type="file" id="f-id" accept="image"></div>
+        </div>
+
+        <input type="text" id="reg-h" placeholder="የባል ሙሉ ስም">
+        <input type="text" id="reg-w" placeholder="የሚስት ሙሉ ስም">
+        <input type="tel" id="reg-p" placeholder="ስልክ ቁጥር">
+
+        <div style="background: #fdfdfd; padding: 10px; border: 1px dashed #ccc; margin-top: 10px;">
+            <label><strong>የቤተሰብ አባላት (የባል እና የሚስት ቤተሰቦችን ጨምሮ)</strong></label>
+            <div id="fam-inputs-area">
+                </div>
+            <button class="btn-info" style="width: auto; padding: 5px 15px; margin-top: 10px;" onclick="newFamRow()">+ ቤተሰብ ጨምር</button>
+        </div>
+
+        <button class="btn-primary" id="reg-btn" onclick="submitRegistration()">ሁሉንም መዝግብ (Save All)</button>
+    </div>
+</div>
 
             <div id="sec-pay" class="content hidden">
                 <div class="card">
@@ -185,6 +244,16 @@
                     </select>
                     <input type="number" id="p-amount" value="100">
                     <button class="btn btn-primary" onclick="processPayment()" data-key="payBtnAction">ክፍያ አዘምን</button>
+                </div>
+            </div>
+
+            <div id="sec-pen" class="content hidden">
+                <div class="card">
+                    <h3 data-key="penTitle">⚖️ የቅጣት መመዝገቢያ</h3>
+                    <select id="pen-member-select"></select>
+                    <input type="number" id="pen-amount" placeholder="የቅጣት መጠን (ETB)">
+                    <input type="text" id="pen-reason" placeholder="የቅጣት ምክንያት (ለምሳሌ፡ ለስብሰባ መቅረት)">
+                    <button class="btn btn-danger" onclick="processPenalty()" data-key="penBtnAction">ቅጣት መዝግብ</button>
                 </div>
             </div>
 
@@ -222,48 +291,61 @@
                 </div>
             </div>
         </div>
-<div id="edit-modal" class="overlay" style="display:none; justify-content: center; align-items: center; z-index: 5000;">
-    <div class="card" style="width: 90%; max-width: 400px; margin-top: 100px;">
-        <h3>✏️ አባል ማስተካከያ</h3>
-        <input type="hidden" id="edit-id">
-        <label>የባል ስም</label><input type="text" id="edit-hName">
-        <label>የሚስት ስም</label><input type="text" id="edit-wName">
-        <label>ስልክ</label><input type="tel" id="edit-phone">
-        <button class="btn btn-success" onclick="updateMember()">አዘምን (Update)</button>
-        <button class="btn btn-danger" onclick="closeEditModal()">ተመለስ</button>
-    </div>
-</div>
-        <footer>
-            <div> © 2018 አ.ም ፋኑኤል ሳይትፓርሴል 1 መረዳጃ ዕድር።<br>© መብቱ በህግ የተጠበቀ ነው።<br>Developed By Horizon Web Tech(Seid Firew)</div>
+
+        <div id="edit-modal" class="overlay" style="display:none; justify-content: center; align-items: center; z-index: 5000;">
+            <div class="card" style="width: 90%; max-width: 400px; margin-top: 100px;">
+                <h3>✏️ አባል ማስተካከያ</h3>
+                <input type="hidden" id="edit-id">
+                <label>የባል ስም</label><input type="text" id="edit-hName">
+                <label>የሚስት ስም</label><input type="text" id="edit-wName">
+                <label>ስልክ</label><input type="tel" id="edit-phone">
+                <button class="btn btn-success" onclick="updateMember()">አዘምን (Update)</button>
+                <button class="btn btn-danger" onclick="closeEditModal()">ተመለስ</button>
+            </div>
+        </div>
+
+
+        <footer class="main-footer">
+            <div class="footer-content">
+                <p>© 2026 G.C ፋኑኤል ሳይት ፓርሴል 1 ህብረት ለአንድነት መረዳጃ ዕድር።</p>
+                <p>© መብቱ በህግ የተጠበቀ ነው።</p>
+                <div class="developer-tag">
+                    Developed By <span class="brand">Horizon Web Tech</span> (Seid Firew)
+                </div>
+            </div>
         </footer>
     </div>
-
-    <script>
+    
+ <script>
         const translations = {
             am: {
-                brand: "ፋኑኤል ዕድር", dash: "🏠 ዳሽቦርድ", list: "📋 የአባላት ዝርዝር", reg: "👤 አዲስ አባል", pay: "💳 ክፍያ", fin: "📊 ገቢ/ወጪ", appr: "🔔 ፍቃድ", sett: "⚙️ ሴቲንግ", logout: "ውጣ (Logout)",
+                brand: "ፋኑኤል ዕድር", dash: "🏠 ዳሽቦርድ", list: "📋 የአባላት ዝርዝር", reg: "👤 አዲስ አባል", pay: "💳 ክፍያ", pen: "⚖️ ቅጣት", fin: "📊 ገቢ/ወጪ", appr: "🔔 ፍቃድ", sett: "⚙️ ሴቲንግ", logout: "ውጣ (Logout)",
                 totalM: "አባላት", totalInc: "ገቢ (ETB)", totalExp: "ወጪ (ETB)", netBal: "ቀሪ (ETB)", pdfBtn: "ሪፖርት (PDF)", csvBtn: "ኤክሴል (CSV)",
                 listTitle: "📋 የአባላት ዝርዝር", searchPl: "አባል በስም ፈልግ...", thName: "ስም", thStatus: "ሁኔታ", thAction: "ድርጊት",
                 regTitle: "👤 አዲስ አባል ምዝገባ", husband: "የባል ስም", wife: "የሚስት ስም", phone: "ስልክ ቁጥር", saveBtn: "መዝግብ",
-                payTitle: "💳 ክፍያ መመዝገቢያ", payBtnAction: "ክፍያ አዘምን", finTitle: "📊 ገቢና ወጪ", optInc: "ገቢ", optExp: "ወጪ", amount: "ብር መጠን", reason: "ምክንያት", finBtn: "ለኦዲት ላክ",
+                payTitle: "💳 ክፍያ መመዝገቢያ", payBtnAction: "ክፍያ አዘምን", 
+                penTitle: "⚖️ የቅጣት መመዝገቢያ", penBtnAction: "ቅጣት መዝግብ",
+                finTitle: "📊 ገቢና ወጪ", optInc: "ገቢ", optExp: "ወጪ", amount: "ብር መጠን", reason: "ምክንያት", finBtn: "ለኦዲት ላክ",
                 apprTitle: "🔔 የፍቃድ ሰንሰለት", thReason: "ምክንያት", thAmt: "መጠን", thStat: "ሁኔታ", thAct: "ድርጊት", settTitle: "⚙️ ማስተካከያ (PIN)", pinBtn: "ቀይር"
             },
             en: {
-                brand: "Fanuel Iddir", dash: "🏠 Dashboard", list: "📋 Member List", reg: "👤 Register", pay: "💳 Payment", fin: "📊 Finance", appr: "🔔 Approvals", sett: "⚙️ Settings", logout: "Logout",
+                brand: "Fanuel Iddir", dash: "🏠 Dashboard", list: "📋 Member List", reg: "👤 Register", pay: "💳 Payment", pen: "⚖️ Penalty", fin: "📊 Finance", appr: "🔔 Approvals", sett: "⚙️ Settings", logout: "Logout",
                 totalM: "Members", totalInc: "Income (ETB)", totalExp: "Expense (ETB)", netBal: "Balance (ETB)", pdfBtn: "PDF Report", csvBtn: "Excel (CSV)",
                 listTitle: "📋 Member Directory", searchPl: "Search by name...", thName: "Name", thStatus: "Status", thAction: "Action",
                 regTitle: "👤 New Member Registration", husband: "Husband Name", wife: "Wife Name", phone: "Phone Number", saveBtn: "Register",
-                payTitle: "💳 Record Payment", payBtnAction: "Update Payment", finTitle: "📊 Income & Expense", optInc: "Income", optExp: "Expense", amount: "Amount", reason: "Reason", finBtn: "Submit to Audit",
+                payTitle: "💳 Record Payment", payBtnAction: "Update Payment", 
+                penTitle: "⚖️ Record Penalty", penBtnAction: "Record Penalty",
+                finTitle: "📊 Income & Expense", optInc: "Income", optExp: "Expense", amount: "Amount", reason: "Reason", finBtn: "Submit to Audit",
                 apprTitle: "🔔 Approval Workflow", thReason: "Reason", thAmt: "Amt", thStat: "Status", thAct: "Action", settTitle: "⚙️ Account Settings", pinBtn: "Change PIN"
             }
         };
 
         const defaultUsers = {
-            "admin": { pin: "1111", role: "chairman", phone: "0911223344" },
-            "secretary": { pin: "2222", role: "secretary", phone: "0900000001" },
-            "finance": { pin: "3333", role: "finance", phone: "0900000002" },
-            "audit1": { pin: "4444", role: "auditor", phone: "0900000003" },
-            "audit2": { pin: "5555", role: "auditor", phone: "0900000004" }
+            "admin": { pin: "1111", role: "chairman", phone: "0911234772" },
+            "secretary": { pin: "2222", role: "secretary", phone: "0942472971" },
+            "finance": { pin: "3333", role: "finance", phone: "0911443108" },
+            "audit1": { pin: "4444", role: "auditor", phone: "0911993521" },
+            "audit2": { pin: "5555", role: "auditor", phone: "0911925155" }
         };
 
         let currentUser = null;
@@ -280,18 +362,14 @@
             const id = document.getElementById('reset-id').value;
             const phone = document.getElementById('reset-phone').value;
             const newPin = document.getElementById('reset-new-pin').value;
-
             if(!id || !phone || newPin.length < 4) return alert("እባክዎ መለያ፣ ስልክ እና 4+ ዲጂት PIN ያስገቡ");
-
             if(defaultUsers[id] && defaultUsers[id].phone === phone) {
                 try {
                     await window.fb.setDoc(window.fb.doc(window.fb.db, "users", id), { pin: newPin }, { merge: true });
                     alert("PIN በስኬት ተቀይሯል! አሁን መግባት ይችላሉ።");
                     toggleResetBox(false);
                 } catch(e) { alert("Error updating PIN"); }
-            } else {
-                alert("የተሳሳተ User ID ወይም ስልክ ቁጥር!");
-            }
+            } else { alert("የተሳሳተ User ID ወይም ስልክ ቁጥር!"); }
         };
 
         window.changeLanguage = function() {
@@ -320,15 +398,135 @@
                 } else { alert("Wrong PIN!"); }
             } catch(e) { alert("Database Error."); }
         };
-  function applyPermissions() {
-    const r = currentUser.role;
-    // ሜኑዎችን እንደ ሮል ማሳያ/መደበቂያ
-    document.getElementById('nav-reg-box').style.display = (r === 'chairman' || r === 'secretary') ? 'flex' : 'none';
-    document.getElementById('nav-pay-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
-    document.getElementById('nav-fin-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+// 1. Function to create the input rows for relatives
+window.newFamRow = function() {
+    const div = document.createElement('div');
+    div.className = 'fam-row';
+    div.style = "display: flex; gap: 8px; margin-bottom: 8px;";
+    div.innerHTML = `
+        <input type="text" class="fam-n" placeholder="ስም" style="flex:2">
+        <select class="fam-r" style="flex:1.5; font-size: 12px;">
+            <option>ልጅ</option>
+            <option>ሚስት</option>
+            <option>ባል</option>
+            <option>የባል እናት</option>
+            <option>የባል አባት</option>
+            <option>የባል እህት</option>
+            <option>የባል ወንድም</option>
+            <option>የሚስት እናት</option>
+            <option>የሚስት አባት</option>
+            <option>የሚስት እህት</option>
+            <option>የሚስት ወንድም</option>
+        </select>
+        <button onclick="this.parentElement.remove()" style="width:30px; background:red; color:white; border:none; border-radius:5px;">X</button>`;
+    document.getElementById('fam-inputs-area').appendChild(div);
+};
 
-    // ሁሉንም ኢንፑቶች መጀመሪያ እናጽዳ (Enable እናድርጋቸው)
-    document.querySelectorAll('input, select, button').forEach(el => el.disabled = false);
+// 2. Function to upload images and save to Firestore
+window.submitRegistration = async function() {
+    const btn = document.getElementById('reg-btn');
+    btn.disabled = true; 
+    btn.innerText = "በመመዝገብ ላይ... (Uploading...)";
+
+    try {
+        const photoFile = document.getElementById('f-photo').files[0];
+        const idFile = document.getElementById('f-id').files[0];
+        let pUrl = "", iUrl = "";
+
+        // Upload Member Photo
+        if(photoFile) {
+            const ref = window.fb.ref(window.fb.storage, `photos/${Date.now()}_p`);
+            await window.fb.uploadBytes(ref, photoFile); 
+            pUrl = await window.fb.getDownloadURL(ref);
+        }
+        // Upload ID Card
+        if(idFile) {
+            const ref = window.fb.ref(window.fb.storage, `ids/${Date.now()}_id`);
+            await window.fb.uploadBytes(ref, idFile); 
+            iUrl = await window.fb.getDownloadURL(ref);
+        }
+
+        // Collect all family rows into an Array
+        const family = Array.from(document.querySelectorAll('.fam-row')).map(r => ({
+            name: r.querySelector('.fam-n').value, 
+            rel: r.querySelector('.fam-r').value
+        })).filter(f => f.name !== ""); // Only save if name is typed
+
+        // Save everything to the "members" collection
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "members"), {
+            hName: document.getElementById('reg-h').value,
+            wName: document.getElementById('reg-w').value,
+            phone: document.getElementById('reg-p').value,
+            photo: pUrl, 
+            idDoc: iUrl, 
+            family: family, 
+            status: "Active",
+            regDate: new Date().toLocaleDateString()
+        });
+
+        alert("ምዝገባው በተሳካ ሁኔታ ተጠናቋል!");
+        location.reload(); // Refresh to clear the form
+    } catch(e) { 
+        alert("ስህተት: " + e.message); 
+        btn.disabled = false; 
+        btn.innerText = "ሁሉንም መዝግብ";
+    }
+};
+window.viewProfile = function(id) {
+    console.log("Viewing profile for ID:", id); // Check your console (F12) to see if this triggers
+    
+    // 1. Find the member in your data array
+    const member = dbData.members.find(m => m.id === id);
+    if (!member) return alert("አባሉ አልተገኘም!");
+
+    // 2. Prepare the Family List
+    let familyHtml = "";
+    if (member.family && member.family.length > 0) {
+        member.family.forEach(f => {
+            familyHtml += `<li style="padding:5px 0; border-bottom:1px solid #eee;">
+                <strong>${f.name}</strong> - <span style="color:#666">${f.rel}</span>
+            </li>`;
+        });
+    } else {
+        familyHtml = "<li>ምንም የተመዘገበ ቤተሰብ የለም።</li>";
+    }
+
+    // 3. Build the Modal Content
+    const content = `
+        <div style="text-align:center;">
+            <img src="${member.photo || 'https://via.placeholder.com/80'}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #2d5a27;">
+            <h3>${member.hName} & ${member.wName}</h3>
+            <p>📞 ${member.phone}</p>
+        </div>
+        <hr>
+        <div style="background:#f9f9f9; padding:10px; border-radius:8px;">
+            <h4 style="margin-top:0;">👨‍👩‍👧‍👦 የቤተሰብ አባላት</h4>
+            <ul style="list-style:none; padding:0; text-align:left;">${familyHtml}</ul>
+        </div>
+        <div style="margin-top:10px;">
+            ${member.idDoc ? `<a href="${member.idDoc}" target="_blank" style="color:#17a2b8; font-weight:bold; text-decoration:none;">📄 የመታወቂያ ኮፒ ይመልከቱ</a>` : ''}
+        </div>
+    `;
+
+    // 4. Inject into the Modal and show it
+    const modal = document.getElementById('global-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    if (modal && modalContent) {
+        modalContent.innerHTML = content;
+        modal.classList.add('active'); // This makes the modal visible
+    } else {
+        alert("ስህተት፡ Modal አልተገኘም!");
+    }
+};
+        function applyPermissions() {
+            const r = currentUser.role;
+            document.getElementById('nav-reg-box').style.display = (r === 'chairman' || r === 'secretary') ? 'flex' : 'none';
+            document.getElementById('nav-pay-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+            document.getElementById('nav-pen-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+            document.getElementById('nav-fin-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
+
+ document.querySelectorAll('input, select, button').forEach(el => el.disabled = false);
 
     if (r === 'chairman') {
         // ከአንድሮይድ እና ከፒን መቀየሪያ ውጭ ያሉትን ኢንፑቶች ዝጋ
@@ -353,67 +551,114 @@
         });
     }
 }
-    function startSync() {
-            window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
-                dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); renderMembers();
-            });
-            window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
-                dbData.finance = snap.docs.map(d => d.data()); updateStats();
-            });
-            window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
-                dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); renderWorkflow();
-            });
-        }
-function renderMembers() {
-    const tbody = document.getElementById('member-table-body');
-    const pSelect = document.getElementById('p-member-select');
-    if(!tbody || !pSelect) return;
-    tbody.innerHTML = ""; pSelect.innerHTML = "";
-    
-    dbData.members.forEach(m => {
-        // ኤዲት ሲነካ መረጃው ወደ ፎርሙ እንዲላክ 'openEditModal' ይጠራል
-        const editBtn = `<button class="btn-success" style="padding:5px 10px; margin-right:5px; border-radius:5px;" 
-                         onclick="openEditModal('${m.id}', '${m.hName}', '${m.wName}', '${m.phone}')">✏️</button>`;
-        const delBtn = `<button class="btn-danger" style="padding:5px 10px; border-radius:5px;" 
-                         onclick="deleteMember('${m.id}')">🗑️</button>`;
+function startSync() {
+    // 1. Members Sync
+    window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
+        dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+        renderMembers();
+    });
 
-        tbody.innerHTML += `<tr>
-            <td>${m.hName}</td>
-            <td>${m.status || 'Active'}</td>
-            <td class="admin-only">${editBtn} ${delBtn}</td>
-        </tr>`;
-        
-        pSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+    // 2. Finance Sync (For Approved Expenses)
+    window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
+        dbData.finance = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+        updateStats(); 
+        updateStatusCounts(); // <--- ADDED: Triggers Approved counter
+    });
+
+    // 3. Workflow Sync (For Pending & Rejected)
+    window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
+        dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+        renderWorkflow(); 
+        updateStatusCounts(); // <--- ADDED: Triggers Pending/Rejected counter
     });
 }
-        window.showSection = function(id) {
+window.renderMembers = function() {
+    const tbody = document.getElementById('member-table-body');
+    const pSelect = document.getElementById('p-member-select');
+    const penSelect = document.getElementById('pen-member-select');
+    
+    if(!tbody) return; // Exit if table isn't on screen
+    
+    tbody.innerHTML = ""; 
+    if(pSelect) pSelect.innerHTML = ""; 
+    if(penSelect) penSelect.innerHTML = "";
+    
+    dbData.members.forEach(m => {
+        // We create the HTML for the buttons
+        const viewBtn = `<button class="btn-info" style="padding:5px 10px; margin-right:5px; border-radius:5px;" onclick="viewProfile('${m.id}')">👁️</button>`;
+        const editBtn = `<button class="btn-success" style="padding:5px 10px; margin-right:5px; border-radius:5px;" onclick="openEditModal('${m.id}')">✏️</button>`;
+        const delBtn = `<button class="btn-danger" style="padding:5px 10px; border-radius:5px;" onclick="deleteMember('${m.id}')">🗑️</button>`;
+        
+        tbody.innerHTML += `
+            <tr>
+                <td>${m.hName || 'Unknown'}</td>
+                <td>${m.status || 'Active'}</td>
+                <td>
+                    ${viewBtn} 
+                    <span class="admin-only">${editBtn} ${delBtn}</span>
+                </td>
+            </tr>`;
+        
+        if(pSelect) pSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+        if(penSelect) penSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+    });
+
+    // This ensures buttons hide/show based on who is logged in
+    if(window.applyPermissions) window.applyPermissions();
+};
+    window.showSection = function(id) {
             document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
             document.getElementById(`sec-${id}`).classList.remove('hidden');
         };
 
-        window.saveMember = async function() {
-            const hName = document.getElementById('m-husband-name').value;
-            if(!hName) return alert("Enter Name");
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "members"), {
-                hName, wName: document.getElementById('m-wife-name').value,
-                phone: document.getElementById('m-phone').value, status: "Active"
-            });
-            alert("Saved!");
-        };
+     
+// --- CORE LOGIC: INCOME (DIRECT) VS EXPENSE (WORKFLOW) ---
 
         window.processPayment = async function() {
-            const mId = document.getElementById('p-member-select').value;
-            const month = document.getElementById('p-month').value;
-            const amt = parseFloat(document.getElementById('p-amount').value);
             const mName = document.getElementById('p-member-select').options[document.getElementById('p-member-select').selectedIndex].text;
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
-                amt, reason: `ክፍያ፡ ${mName} (${month})`, type: 'income',
-                status: "pending_audit", audit1: false, audit2: false,
-                submittedBy: currentUser.id, timestamp: new Date()
+            const amt = parseFloat(document.getElementById('p-amount').value);
+            const month = document.getElementById('p-month').value;
+            
+            // INCOME: No approval needed, save directly to finance
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
+                amt, reason: `መደበኛ ክፍያ: ${mName} (${month})`, type: 'income', date: new Date().toLocaleDateString()
             });
-            alert("ክፍያው ለኦዲት ተልኳል!");
+            alert("ክፍያው ተመዝግቧል!");
         };
 
+        window.processPenalty = async function() {
+            const mName = document.getElementById('pen-member-select').options[document.getElementById('pen-member-select').selectedIndex].text;
+            const amt = parseFloat(document.getElementById('pen-amount').value);
+            const reason = document.getElementById('pen-reason').value;
+
+            // INCOME: No approval needed, save directly to finance
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
+                amt, reason: `ቅጣት: ${mName} (${reason})`, type: 'income', date: new Date().toLocaleDateString()
+            });
+            alert("ቅጣቱ ተመዝግቧል!");
+        };
+
+       window.addFinance = async function() {
+            const amt = parseFloat(document.getElementById('f-amt').value);
+            const type = document.getElementById('f-type').value;
+            const reason = document.getElementById('f-reason').value;
+
+            if(type === 'income') {
+                // Direct Save
+                await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
+                    amt, reason, type: 'income', date: new Date().toLocaleDateString()
+                });
+                alert("ገቢው ተመዝግቧል!");
+            } else {
+
+                // EXPENSE: Needs approval
+                await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
+                    amt, reason, type: 'expense', status: "pending_audit",
+                    audit1: false, audit2: false, submittedBy: currentUser.id, timestamp: new Date()
+                });
+                alert("የወጪ ጥያቄው ለኦዲት ተልኳል!");
+            }
+        };
         window.addFinance = async function() {
             const amt = parseFloat(document.getElementById('f-amt').value);
             const type = document.getElementById('f-type').value;
@@ -451,11 +696,7 @@ function renderMembers() {
         window.rejectWorkflow = async function(id) {
             if(confirm("ይህንን መረጃ ውድቅ (Reject) ማድረግ ይፈልጋሉ?")) {
                 const docRef = window.fb.doc(window.fb.db, "workflow", id);
-                await window.fb.updateDoc(docRef, { 
-                    status: "Rejected",
-                    rejectedBy: currentUser.id,
-                    rejectDate: new Date().toLocaleDateString()
-                });
+                await window.fb.updateDoc(docRef, { status: "Rejected", rejectedBy: currentUser.id, rejectDate: new Date().toLocaleDateString() });
                 alert("መረጃው ውድቅ ተደርጓል!");
             }
         };
@@ -469,10 +710,8 @@ function renderMembers() {
                     actionBtn = `<button class="btn btn-primary" style="padding:5px 10px; font-size:11px;" onclick="auditSign('${w.id}')">Sign</button>`;
                 }
                 if(w.status === 'pending_chairman' && currentUser.role === 'chairman') {
-                    actionBtn = `
-                        <button class="btn btn-info" style="padding:5px 10px; font-size:11px; margin-bottom:2px;" onclick="finalApprove('${w.id}')">Approve</button>
-                        <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="rejectWorkflow('${w.id}')">Reject</button>
-                    `;
+                    actionBtn = `<button class="btn btn-info" style="padding:5px 10px; font-size:11px;" onclick="finalApprove('${w.id}')">Approve</button>
+                                 <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="rejectWorkflow('${w.id}')">Reject</button>`;
                 }
                 const statusDisplay = w.status === 'Rejected' ? `<span style="color:red; font-weight:bold;">Rejected</span>` : w.status;
                 tbody.innerHTML += `<tr><td>${w.reason}</td><td>${w.amt}</td><td>${statusDisplay}</td><td>${actionBtn}</td></tr>`;
@@ -488,7 +727,37 @@ function renderMembers() {
             document.getElementById('net-bal').innerText = (inc - exp).toLocaleString();
             if(myChart) { myChart.data.datasets[0].data = [inc, exp]; myChart.update(); }
         }
+function updateStatusCounts() {
+    // 1. Pending: Count anything that IS NOT 'rejected' and IS NOT yet moved to finance
+    // This looks at the workflow collection
+    const pending = dbData.workflow.filter(w => 
+        w.status === 'pending_audit' || 
+        w.status === 'pending_chairman'
+    ).length;
+    
+    // 2. Approved: In an Iddir, an 'Approved' item is a successful 'Expense' 
+    // This looks at the finance collection
+    const approved = dbData.finance.filter(f => 
+        f.type === 'expense'
+    ).length;
+    
+    // 3. Rejected: Count items specifically marked 'rejected'
+    // This looks at the workflow collection
+    const rejected = dbData.workflow.filter(w => 
+        w.status === 'rejected'
+    ).length;
 
+    // Update the HTML Elements
+    const pEl = document.getElementById('stat-pending');
+    const aEl = document.getElementById('stat-approved');
+    const rEl = document.getElementById('stat-rejected');
+
+    if(pEl) pEl.innerText = pending;
+    if(aEl) aEl.innerText = approved;
+    if(rEl) rEl.innerText = rejected;
+    
+    console.log("Counts Updated:", { pending, approved, rejected });
+}
         function initChart() {
             const ctx = document.getElementById('paymentChart').getContext('2d');
             myChart = new Chart(ctx, {
@@ -504,67 +773,25 @@ function renderMembers() {
             const input = document.getElementById('m-search').value.toLowerCase();
             document.querySelectorAll('#member-table-body tr').forEach(row => { row.style.display = row.cells[0].innerText.toLowerCase().includes(input) ? '' : 'none'; });
         }
-    
-window.exportToCSV = function() {
-    if (dbData.finance.length === 0) {
-        return alert("ምንም አይነት የፋይናንስ መረጃ የለም!");
-    }
 
-    // የሪፖርቱ ርዕሶች (Headers)
-    const headers = ["Date", "Reason", "Name", "Type", "Amount", "Approved By"];
-    
-    // ዳታውን ወደ CSV ረድፎች መቀየር
-    const rows = dbData.finance.map(f => [
-        f.date || "-",
-        `"${f.reason || '-'}"`, // ምክንያቱ ውስጥ ኮማ ቢኖር እንዳይበላሽ በኩቴሽን
-        f.name || "-",
-        f.type || "-",
-        f.amt || 0,
-        f.approvedBy || "System"
-    ]);
+        window.exportToCSV = function() {
+            if (dbData.finance.length === 0) return alert("ምንም አይነት የፋይናንስ መረጃ የለም!");
+            const headers = ["Date", "Reason", "Type", "Amount"];
+            const rows = dbData.finance.map(f => [f.date || "-", `"${f.reason || '-'}"`, f.type || "-", f.amt || 0]);
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Fanuel_Iddir_Report.csv");
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        };
 
-    // የCSV ይዘቱን ማዘጋጀት
-    let csvContent = "data:text/csv;charset=utf-8,\uFEFF" // \uFEFF ለአማርኛ ዩኒኮድ ድጋፍ
-        + headers.join(",") + "\n" 
-        + rows.map(e => e.join(",")).join("\n");
-
-    // ፋይሉን እንዲወርድ ማድረግ
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "Fanuel_Iddir_Report.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
-window.generatePDF = function() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    doc.text("Fanuel Iddir Financial Report", 14, 15);
-    
-    // አዲሶቹን 6 ኮለሞች ማካተት
-    const rows = dbData.finance.map(f => [
-        f.date || '-',
-        f.reason || '-',
-        f.name || '-',
-        f.type || '-',
-        (f.amt || 0) + " ETB",
-        f.approvedBy || 'System'
-    ]);
-
-    doc.autoTable({ 
-        head: [['Date', 'Reason', 'Name', 'Type', 'Amount', 'Approved By']], 
-        body: rows, 
-        startY: 20,
-        styles: { fontSize: 8 }, // ብዙ ኮለም ስለሆነ ጽሁፉን ትንሽ ማሳነስ
-        headStyles: { fillColor: [45, 90, 39] } // ካንተ ግሪን ከለር ጋር ተመሳሳይ
-    });
-    
-    doc.save("Finance_Report.pdf");
-};
-
-
+        window.generatePDF = function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Fanuel Iddir Financial Report", 14, 15);
+            const rows = dbData.finance.map(f => [f.date || '-', f.reason || '-', f.type || '-', (f.amt || 0) + " ETB"]);
+            doc.autoTable({ head: [['Date', 'Reason', 'Type', 'Amount']], body: rows, startY: 20 });
+            doc.save("Finance_Report.pdf");
+        };
 
         window.deleteMember = async function(id) { if(confirm("ይህ አባል ይጥፋ?")) await window.fb.deleteDoc(window.fb.doc(window.fb.db, "members", id)); };
         
@@ -575,32 +802,86 @@ window.generatePDF = function() {
             alert("PIN Updated! Please login again."); location.reload();
         };
 
+        window.openEditModal = (id, hName, wName, phone) => {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-hName').value = hName;
+            document.getElementById('edit-wName').value = wName;
+            document.getElementById('edit-phone').value = phone;
+            document.getElementById('edit-modal').style.display = 'flex';
+        };
+        window.closeEditModal = () => { document.getElementById('edit-modal').style.display = 'none'; };
+        window.updateMember = async () => {
+            const id = document.getElementById('edit-id').value;
+            const ref = window.fb.doc(window.fb.db, "members", id);
+            await window.fb.updateDoc(ref, { hName: document.getElementById('edit-hName').value, wName: document.getElementById('edit-wName').value, phone: document.getElementById('edit-phone').value });
+            alert("ተስተካክሏል!"); closeEditModal();
+        };
 
-// ኤዲት ቦክሱን ለመክፈትና ዳታውን ለመሙላት
-window.openEditModal = (id, hName, wName, phone) => {
-    document.getElementById('edit-id').value = id;
-    document.getElementById('edit-hName').value = hName;
-    document.getElementById('edit-wName').value = wName;
-    document.getElementById('edit-phone').value = phone;
-    document.getElementById('edit-modal').style.display = 'flex';
-};
 
-// ቦክሱን ለመዝጋት
-window.closeEditModal = () => { document.getElementById('edit-modal').style.display = 'none'; };
 
-// ዳታቤዝ ላይ ለመቀየር
-window.updateMember = async () => {
-    const id = document.getElementById('edit-id').value;
-    const ref = window.fb.doc(window.fb.db, "members", id);
-    await window.fb.updateDoc(ref, {
-        hName: document.getElementById('edit-hName').value,
-        wName: document.getElementById('edit-wName').value,
-        phone: document.getElementById('edit-phone').value
+window.applyPermissions = function() {
+    if (!currentUser) return;
+
+    const role = currentUser.role.toLowerCase();
+    const adminElements = document.querySelectorAll('.admin-only');
+
+    adminElements.forEach(el => {
+        // ONLY the secretary can see Edit/Delete buttons
+        if (role === 'secretary') {
+            el.style.display = 'inline-block'; 
+        } else {
+            el.style.display = 'none'; // Hidden for Chairman, Finance, and Auditors
+        }
     });
-    alert("ተስተካክሏል!");
-    closeEditModal();
+
+    // Optional: Hide the entire Registration tab for non-secretaries
+    const regTab = document.getElementById('nav-reg');
+    if (regTab) {
+        regTab.style.display = (role === 'secretary') ? 'flex' : 'none';
+    }
+};
+window.handlePrint = function(id) {
+    var el = document.getElementById(id);
+    if (!el) return alert("ስህተት: የሚታተም መረጃ አልተገኘም");
+
+    // Direct Raw Link for the Logo
+    var logoUrl = "https://github.com/SEID-FULLSTACK/Fanuel-iddir/blob/main/iddir-logo.png?raw=true";
+
+    // Safe Header Building (No backticks, no special characters)
+    var h = '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #00563b; padding-bottom:10px; margin-bottom:20px;">';
+    h += '<img id="print-logo" src="' + logoUrl + '" style="height:80px; width:auto;">';
+    h += '<div style="text-align:right; font-size:14px; font-weight:bold; color:#00563b; font-family:sans-serif;">';
+    h += 'ፋኑኤል ሳይት ፓርሴል 1 ረዳትና መረዳጃ ዕድር<br>ስልክ፡ 0942-472971 / 0911-443108<br>አዲስ አበባ፣ ኢትዮጵያ</div></div>';
+
+    var w = window.open('', '_blank');
+    if (!w) return alert("እባክዎ Pop-up እንዲሰራ ይፍቀዱ");
+
+    // THE FIX: We break the closing tags so the browser doesn't crash
+    w.document.write('<html><head><title>Print</title>');
+    w.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ddd;padding:8px;}</style>');
+    w.document.write('</head><body>');
+    // We split the tags like "</" + "body>" so the browser doesn't get confused
+w.document.write(el.innerHTML);
+w.document.write("<" + "/body><" + "/html>");
+w.document.close();
+    w.document.close();
+
+    var img = w.document.getElementById('reportLogo');
+
+var proceedToPrint = function() {
+    w.focus();
+    w.print();
+    w.close();
 };
 
-    </script>
-</body>
+if (img.complete) {
+    proceedToPrint(); // If logo is already in memory
+} else {
+    img.onload = proceedToPrint; // Wait for logo to download
+    img.onerror = proceedToPrint; // Print anyway if logo fails
+    setTimeout(proceedToPrint, 3000); // Safety timeout (3 seconds)
+}
+};
+  </script>
+   </body>
 </html>

@@ -6,7 +6,7 @@
     <title>ፋኑኤል ሳይት ፓርሴል1 ህብረት ለአንድነት መረዳጃ ዕድር</title>
     <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo192.png">
-    <meta name="theme-color" content="#2196f3">
+    <meta name="theme-color" content="#2d5a27">
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -64,6 +64,7 @@
             width: 100%;
             margin-top: auto;
   }
+
 .main-footer p, .main-footer div {
             color: black;
             margin: 2px 0;
@@ -78,7 +79,7 @@ font-size: 18px;
             z-index: 3000; transition: 0.3s; padding-top: 20px;
         }
         #side-menu.open { left: 0; }
-        .menu-item { padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #333; }
+        .menu-item { padding: 15px 20px; border-bottom: 1px solid #eee; cursor: pointer; align-items: center; gap: 15px; color: #333; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2500; }
         .overlay.active { display: block; }
 
@@ -99,6 +100,20 @@ font-size: 18px;
         th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-item { padding: 15px; border-radius: 10px; color: white; text-align: center; font-weight: bold; }
+/* ሳጥኖቹ ሲቆለፉ (Disabled ሲሆኑ) የሚኖራቸው መልክ */
+input:disabled, select:disabled, textarea:disabled {
+    background-color: #f0f0f0 !important; /* ግራጫ ቀለም */
+    color: #888 !important;              /* የጽሁፉ ቀለም ደበዝ እንዲል */
+    cursor: not-allowed !important;      /* የክልከላ ምልክት */
+    border: 1px solid #ccc !important;
+    opacity: 0.8;
+}
+
+/* መዝግብ የሚሉ በተኖች ሲደበቁ */
+.inputer-only.hidden-btn {
+    display: none !important;
+}
+
     </style>
 </head>
 <body>
@@ -194,7 +209,7 @@ font-size: 18px;
                     <input type="text" id="m-search" class="search-box" placeholder="አባል በስም ፈልግ..." onkeyup="filterMembers()">
                     <div style="overflow-x: auto;">
                         <table id="m-table">
-                            <thead><tr><th data-key="thName">ስም</th><th data-key="thStatus">ሁኔታ</th><th class="admin-only" data-key="thAction">ድርጊት</th></tr></thead>
+             <thead><tr><th data-key="thName">ስም</th><th data-key="thStatus">ሁኔታ</th><th class="admin-only" data-key="thAction">ድርጊት</th></tr></thead>
                             <tbody id="member-table-body"></tbody>
                         </table>
                     </div>
@@ -227,7 +242,7 @@ font-size: 18px;
             <button class="btn-info" style="width: auto; padding: 5px 15px; margin-top: 10px;" onclick="newFamRow()">+ ቤተሰብ ጨምር</button>
         </div>
 
-        <button class="btn-primary" id="reg-btn" onclick="submitRegistration()">ሁሉንም መዝግብ (Save All)</button>
+        <button class="btn btn-primary inputer-only" id="reg-btn" onclick="submitRegistration()">ሁሉንም መዝግብ (Save All)</button>
     </div>
 </div>
 
@@ -245,7 +260,7 @@ font-size: 18px;
                         <option value="ግንቦት">ግንቦት</option><option value="ሰኔ">ሰኔ</option><option value="ሐምሌ">ሐምሌ</option><option value="ነሐሴ">ነሐሴ</option>
                     </select>
                     <input type="number" id="p-amount" value="100">
-                    <button class="btn btn-primary" onclick="processPayment()" data-key="payBtnAction">ክፍያ አዘምን</button>
+                     <button class="btn btn-primary inputer-only" onclick="processPayment()" data-key="payBtnAction">ክፍያ አዘምን</button>
                 </div>
             </div>
 
@@ -255,7 +270,7 @@ font-size: 18px;
                     <select id="pen-member-select"></select>
                     <input type="number" id="pen-amount" placeholder="የቅጣት መጠን (ETB)">
                     <input type="text" id="pen-reason" placeholder="የቅጣት ምክንያት (ለምሳሌ፡ ለስብሰባ መቅረት)">
-                    <button class="btn btn-danger" onclick="processPenalty()" data-key="penBtnAction">ቅጣት መዝግብ</button>
+                    <button class="btn btn-danger inputer-only" onclick="processPenalty()" data-key="penBtnAction">ቅጣት መዝግብ</button>
                 </div>
             </div>
 
@@ -268,7 +283,7 @@ font-size: 18px;
                     </select>
                     <input type="number" id="f-amt" placeholder="ብር መጠን">
                     <input type="text" id="f-reason" placeholder="ምክንያት">
-                    <button class="btn btn-primary" onclick="addFinance()" data-key="finBtn">ለኦዲት ላክ (Submit)</button>
+                    <button class="btn btn-primary inputer-only" onclick="addFinance()" data-key="finBtn">ለኦዲት ላክ (Submit)</button>
                 </div>
             </div>
 
@@ -317,573 +332,401 @@ font-size: 18px;
             </div>
         </footer>
     </div>
-    
  <script>
-        const translations = {
-            am: {
-                brand: "ፋኑኤል ዕድር", dash: "🏠 ዳሽቦርድ", list: "📋 የአባላት ዝርዝር", reg: "👤 አዲስ አባል", pay: "💳 ክፍያ", pen: "⚖️ ቅጣት", fin: "📊 ገቢ/ወጪ", appr: "🔔 ፍቃድ", sett: "⚙️ ሴቲንግ", logout: "ውጣ (Logout)",
-                totalM: "አባላት", totalInc: "ገቢ (ETB)", totalExp: "ወጪ (ETB)", netBal: "ቀሪ (ETB)", pdfBtn: "ሪፖርት (PDF)", csvBtn: "ኤክሴል (CSV)",
-                listTitle: "📋 የአባላት ዝርዝር", searchPl: "አባል በስም ፈልግ...", thName: "ስም", thStatus: "ሁኔታ", thAction: "ድርጊት",
-                regTitle: "👤 አዲስ አባል ምዝገባ", husband: "የባል ስም", wife: "የሚስት ስም", phone: "ስልክ ቁጥር", saveBtn: "መዝግብ",
-                payTitle: "💳 ክፍያ መመዝገቢያ", payBtnAction: "ክፍያ አዘምን", 
-                penTitle: "⚖️ የቅጣት መመዝገቢያ", penBtnAction: "ቅጣት መዝግብ",
-                finTitle: "📊 ገቢና ወጪ", optInc: "ገቢ", optExp: "ወጪ", amount: "ብር መጠን", reason: "ምክንያት", finBtn: "ለኦዲት ላክ",
-                apprTitle: "🔔 የፍቃድ ሰንሰለት", thReason: "ምክንያት", thAmt: "መጠን", thStat: "ሁኔታ", thAct: "ድርጊት", settTitle: "⚙️ ማስተካከያ (PIN)", pinBtn: "ቀይር"
-            },
-            en: {
-                brand: "Fanuel Iddir", dash: "🏠 Dashboard", list: "📋 Member List", reg: "👤 Register", pay: "💳 Payment", pen: "⚖️ Penalty", fin: "📊 Finance", appr: "🔔 Approvals", sett: "⚙️ Settings", logout: "Logout",
-                totalM: "Members", totalInc: "Income (ETB)", totalExp: "Expense (ETB)", netBal: "Balance (ETB)", pdfBtn: "PDF Report", csvBtn: "Excel (CSV)",
-                listTitle: "📋 Member Directory", searchPl: "Search by name...", thName: "Name", thStatus: "Status", thAction: "Action",
-                regTitle: "👤 New Member Registration", husband: "Husband Name", wife: "Wife Name", phone: "Phone Number", saveBtn: "Register",
-                payTitle: "💳 Record Payment", payBtnAction: "Update Payment", 
-                penTitle: "⚖️ Record Penalty", penBtnAction: "Record Penalty",
-                finTitle: "📊 Income & Expense", optInc: "Income", optExp: "Expense", amount: "Amount", reason: "Reason", finBtn: "Submit to Audit",
-                apprTitle: "🔔 Approval Workflow", thReason: "Reason", thAmt: "Amt", thStat: "Status", thAct: "Action", settTitle: "⚙️ Account Settings", pinBtn: "Change PIN"
+    const translations = {
+        am: {
+            brand: "ፋኑኤል ዕድር", dash: "🏠 ዳሽቦርድ", list: "📋 የአባላት ዝርዝር", reg: "👤 አዲስ አባል", pay: "💳 ክፍያ", pen: "⚖️ ቅጣት", fin: "📊 ገቢ/ወጪ", appr: "🔔 ፍቃድ", sett: "⚙️ ሴቲንግ", logout: "ውጣ (Logout)",
+            totalM: "አባላት", totalInc: "ገቢ (ETB)", totalExp: "ወጪ (ETB)", netBal: "ቀሪ (ETB)", pdfBtn: "ሪፖርት (PDF)", csvBtn: "ኤክሴል (CSV)",
+            listTitle: "📋 የአባላት ዝርዝር", searchPl: "አባል በስም ፈልግ...", thName: "ስም", thStatus: "ሁኔታ", thAction: "ድርጊት",
+            regTitle: "👤 አዲስ አባል ምዝገባ", husband: "የባል ስም", wife: "የሚስት ስም", phone: "ስልክ ቁጥር", saveBtn: "መዝግብ",
+            payTitle: "💳 ክፍያ መመዝገቢያ", payBtnAction: "ክፍያ አዘምን", 
+            penTitle: "⚖️ የቅጣት መመዝገቢያ", penBtnAction: "ቅጣት መዝግብ",
+            finTitle: "📊 ገቢና ወጪ", optInc: "ገቢ", optExp: "ወጪ", amount: "ብር መጠን", reason: "ምክንያት", finBtn: "ለኦዲት ላክ",
+            apprTitle: "🔔 የፍቃድ ሰንሰለት", thReason: "ምክንያት", thAmt: "መጠን", thStat: "ሁኔታ", thAct: "ድርጊት", settTitle: "⚙️ ማስተካከያ (PIN)", pinBtn: "ቀይር"
+        },
+        en: {
+            brand: "Fanuel Iddir", dash: "🏠 Dashboard", list: "📋 Member List", reg: "👤 Register", pay: "💳 Payment", pen: "⚖️ Penalty", fin: "📊 Finance", appr: "🔔 Approvals", sett: "⚙️ Settings", logout: "Logout",
+            totalM: "Members", totalInc: "Income (ETB)", totalExp: "Expense (ETB)", netBal: "Balance (ETB)", pdfBtn: "PDF Report", csvBtn: "Excel (CSV)",
+            listTitle: "📋 Member Directory", searchPl: "Search by name...", thName: "Name", thStatus: "Status", thAction: "Action",
+            regTitle: "👤 New Member Registration", husband: "Husband Name", wife: "Wife Name", phone: "Phone Number", saveBtn: "Register",
+            payTitle: "💳 Record Payment", payBtnAction: "Update Payment", 
+            penTitle: "⚖️ Record Penalty", penBtnAction: "Record Penalty",
+            finTitle: "📊 Income & Expense", optInc: "Income", optExp: "Expense", amount: "Amount", reason: "Reason", finBtn: "Submit to Audit",
+            apprTitle: "🔔 Approval Workflow", thReason: "Reason", thAmt: "Amt", thStat: "Status", thAct: "Action", settTitle: "⚙️ Account Settings", pinBtn: "Change PIN"
+        }
+    };
+
+    const defaultUsers = {
+        "admin": { pin: "1111", role: "chairman", phone: "0911234772" },
+        "secretary": { pin: "2222", role: "secretary", phone: "0942472971" },
+        "finance": { pin: "3333", role: "finance", phone: "0911443108" },
+        "audit1": { pin: "4444", role: "auditor", phone: "0911993521" },
+        "audit2": { pin: "5555", role: "auditor", phone: "0911925155" }
+    };
+
+    let currentUser = null;
+    let dbData = { members: [], finance: [], workflow: [] };
+    let myChart = null;
+
+    // --- CLOUDINARY UPLOAD ---
+    async function uploadToCloudinary(file) {
+        if (!file) return "";
+        const cloudName = "ddrhpcljy"; 
+        const uploadPreset = "fanuel_upload"; 
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', uploadPreset);
+        try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method: 'POST', body: formData });
+            const data = await response.json();
+            return data.secure_url || "";
+        } catch (err) { return ""; }
+    }
+
+    // --- DYNAMIC FAMILY ROW ---
+    window.newFamRow = function() {
+        const div = document.createElement('div');
+        div.className = 'fam-row';
+        div.style = "display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding: 10px; background: #f0f0f0; border-radius: 5px; position: relative;";
+        div.innerHTML = `
+            <input type="text" class="fam-n" placeholder="ስም" style="flex:2; min-width: 120px;">
+            <select class="fam-r" style="flex:1.5; font-size: 12px;">
+                <option>ልጅ</option><option>ሚስት</option><option>ባል</option>
+                <option>የባል እናት</option><option>የባል አባት</option><option>የባል እህት</option>
+                <option>የባል ወንድም</option><option>የሚስት እናት</option><option>የሚስት አባት</option>
+                <option>የሚስት እህት</option><option>የሚስት ወንድም</option>
+            </select>
+            <div style="flex: 100%; display: flex; gap: 10px; margin-top: 5px;">
+                <div style="font-size: 11px;">ፎቶ: <input type="file" class="fam-p" accept="image/*" style="width: 130px;"></div>
+                <div style="font-size: 11px;">ID: <input type="file" class="fam-id" accept="image/*" style="width: 130px;"></div>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" style="position: absolute; right: 5px; top: 5px; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer;">X</button>`;
+        document.getElementById('fam-inputs-area').appendChild(div);
+    };
+
+    // --- SUBMIT REGISTRATION ---
+    window.submitRegistration = async function() {
+        const btn = document.getElementById('reg-btn');
+        btn.disabled = true; btn.innerText = "በመመዝገብ ላይ...";
+        try {
+            const pUrl = await uploadToCloudinary(document.getElementById('f-photo').files[0]);
+            const iUrl = await uploadToCloudinary(document.getElementById('f-id').files[0]);
+
+            const famRows = document.querySelectorAll('.fam-row');
+            let familyArray = [];
+            for (let row of famRows) {
+                const name = row.querySelector('.fam-n').value;
+                if(!name) continue;
+                const rel = row.querySelector('.fam-r').value;
+                const pFile = row.querySelector('.fam-p').files[0];
+                const iFile = row.querySelector('.fam-id').files[0];
+                const mPhoto = pFile ? await uploadToCloudinary(pFile) : "";
+                const mId = iFile ? await uploadToCloudinary(iFile) : "";
+                familyArray.push({ name, rel, photoUrl: mPhoto, idUrl: mId });
             }
-        };
 
-        const defaultUsers = {
-            "admin": { pin: "1111", role: "chairman", phone: "0911234772" },
-            "secretary": { pin: "2222", role: "secretary", phone: "0942472971" },
-            "finance": { pin: "3333", role: "finance", phone: "0911443108" },
-            "audit1": { pin: "4444", role: "auditor", phone: "0911993521" },
-            "audit2": { pin: "5555", role: "auditor", phone: "0911925155" }
-        };
-
-        let currentUser = null;
-        let dbData = { members: [], finance: [], workflow: [] };
-        let myChart = null;
-
-        // --- PASSWORD RESET LOGIC ---
-        window.toggleResetBox = function(show) {
-            document.getElementById('login-form-box').classList.toggle('hidden', show);
-            document.getElementById('reset-form-box').classList.toggle('hidden', !show);
-        };
-
-        window.handleResetPIN = async function() {
-            const id = document.getElementById('reset-id').value;
-            const phone = document.getElementById('reset-phone').value;
-            const newPin = document.getElementById('reset-new-pin').value;
-            if(!id || !phone || newPin.length < 4) return alert("እባክዎ መለያ፣ ስልክ እና 4+ ዲጂት PIN ያስገቡ");
-            if(defaultUsers[id] && defaultUsers[id].phone === phone) {
-                try {
-                    await window.fb.setDoc(window.fb.doc(window.fb.db, "users", id), { pin: newPin }, { merge: true });
-                    alert("PIN በስኬት ተቀይሯል! አሁን መግባት ይችላሉ።");
-                    toggleResetBox(false);
-                } catch(e) { alert("Error updating PIN"); }
-            } else { alert("የተሳሳተ User ID ወይም ስልክ ቁጥር!"); }
-        };
-
-        window.changeLanguage = function() {
-            const lang = document.getElementById('lang-select').value;
-            const t = translations[lang];
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (t[key]) el.innerText = t[key];
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "members"), {
+                hName: document.getElementById('reg-h').value,
+                wName: document.getElementById('reg-w').value,
+                phone: document.getElementById('reg-p').value,
+                photo: pUrl, idDoc: iUrl, family: familyArray, status: "Active", regDate: new Date().toLocaleDateString()
             });
-            document.getElementById('m-search').placeholder = t.searchPl;
-        };
+            alert("ምዝገባው ተጠናቋል!"); location.reload();
+        } catch(e) { alert("ስህተት: " + e.message); btn.disabled = false; btn.innerText = "መዝግብ"; }
+    };
 
-        window.handleLogin = async function() {
-            const id = document.getElementById('login-id').value;
-            const pin = document.getElementById('login-pin').value;
-            if (!defaultUsers[id]) return alert("User not found!");
-            try {
-                const userDoc = await window.fb.getDoc(window.fb.doc(window.fb.db, "users", id));
-                let validPin = userDoc.exists() ? userDoc.data().pin : defaultUsers[id].pin;
-                if (validPin === pin) {
-                    currentUser = { id, ...defaultUsers[id] };
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('main-app').classList.remove('hidden');
-                    document.getElementById('m-user-display').innerText = `Hello, ${id}`;
-                    applyPermissions(); initChart(); startSync(); showSection('dash'); window.changeLanguage();
-                } else { alert("Wrong PIN!"); }
-            } catch(e) { alert("Database Error."); }
-        };
-// 1. Function to create the input rows for relatives
-window.newFamRow = function() {
-    const div = document.createElement('div');
-    div.className = 'fam-row';
-    div.style = "display: flex; gap: 8px; margin-bottom: 8px;";
-    div.innerHTML = `
-        <input type="text" class="fam-n" placeholder="ስም" style="flex:2">
-        <select class="fam-r" style="flex:1.5; font-size: 12px;">
-            <option>ልጅ</option>
-            <option>ሚስት</option>
-            <option>ባል</option>
-            <option>የባል እናት</option>
-            <option>የባል አባት</option>
-            <option>የባል እህት</option>
-            <option>የባል ወንድም</option>
-            <option>የሚስት እናት</option>
-            <option>የሚስት አባት</option>
-            <option>የሚስት እህት</option>
-            <option>የሚስት ወንድም</option>
-        </select>
-        <button onclick="this.parentElement.remove()" style="width:30px; background:red; color:white; border:none; border-radius:5px;">X</button>`;
-    document.getElementById('fam-inputs-area').appendChild(div);
-};
+   // --- LOGIN ---
+window.handleLogin = async function() {
+    const id = document.getElementById('login-id').value;
+    const pin = document.getElementById('login-pin').value;
 
-// 2. Function to upload images and save to Firestore
-window.submitRegistration = async function() {
-    const btn = document.getElementById('reg-btn');
-    btn.disabled = true; 
-    btn.innerText = "በመመዝገብ ላይ... (Uploading...)";
+    if (!defaultUsers[id]) return alert("User not found!");
 
     try {
-        const photoFile = document.getElementById('f-photo').files[0];
-        const idFile = document.getElementById('f-id').files[0];
-        let pUrl = "", iUrl = "";
+        const userDoc = await window.fb.getDoc(window.fb.doc(window.fb.db, "users", id));
+        let validPin = userDoc.exists() ? userDoc.data().pin : defaultUsers[id].pin;
 
-        // Upload Member Photo
-        if(photoFile) {
-            const ref = window.fb.ref(window.fb.storage, `photos/${Date.now()}_p`);
-            await window.fb.uploadBytes(ref, photoFile); 
-            pUrl = await window.fb.getDownloadURL(ref);
+        if (validPin === pin) {
+            // ተጠቃሚውን ከነ Role-ኡ መመዝገብ
+            currentUser = { id, ...defaultUsers[id] };
+
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('m-user-display').innerText = `ሰላም, ${id}`;
+
+            // ዋናው ክፍል፡ ፈቃዶችን ስራ ላይ ማዋል
+            applyPermissions(); 
+
+            // ሌሎች ስራዎች
+            initChart(); 
+            startSync(); 
+            showSection('dash'); 
+            window.changeLanguage();
+        } else { 
+            alert("የተሳሳተ PIN!"); 
         }
-        // Upload ID Card
-        if(idFile) {
-            const ref = window.fb.ref(window.fb.storage, `ids/${Date.now()}_id`);
-            await window.fb.uploadBytes(ref, idFile); 
-            iUrl = await window.fb.getDownloadURL(ref);
-        }
-
-        // Collect all family rows into an Array
-        const family = Array.from(document.querySelectorAll('.fam-row')).map(r => ({
-            name: r.querySelector('.fam-n').value, 
-            rel: r.querySelector('.fam-r').value
-        })).filter(f => f.name !== ""); // Only save if name is typed
-
-        // Save everything to the "members" collection
-        await window.fb.addDoc(window.fb.collection(window.fb.db, "members"), {
-            hName: document.getElementById('reg-h').value,
-            wName: document.getElementById('reg-w').value,
-            phone: document.getElementById('reg-p').value,
-            photo: pUrl, 
-            idDoc: iUrl, 
-            family: family, 
-            status: "Active",
-            regDate: new Date().toLocaleDateString()
-        });
-
-        alert("ምዝገባው በተሳካ ሁኔታ ተጠናቋል!");
-        location.reload(); // Refresh to clear the form
     } catch(e) { 
-        alert("ስህተት: " + e.message); 
-        btn.disabled = false; 
-        btn.innerText = "ሁሉንም መዝግብ";
+        console.error(e);
+        alert("Database Error."); 
     }
 };
-window.viewProfile = function(id) {
-    console.log("Viewing profile for ID:", id); // Check your console (F12) to see if this triggers
-    
-    // 1. Find the member in your data array
-    const member = dbData.members.find(m => m.id === id);
-    if (!member) return alert("አባሉ አልተገኘም!");
-
-    // 2. Prepare the Family List
-    let familyHtml = "";
-    if (member.family && member.family.length > 0) {
-        member.family.forEach(f => {
-            familyHtml += `<li style="padding:5px 0; border-bottom:1px solid #eee;">
-                <strong>${f.name}</strong> - <span style="color:#666">${f.rel}</span>
-            </li>`;
-        });
-    } else {
-        familyHtml = "<li>ምንም የተመዘገበ ቤተሰብ የለም።</li>";
-    }
-
-    // 3. Build the Modal Content
-    const content = `
-        <div style="text-align:center;">
-            <img src="${member.photo || 'https://via.placeholder.com/80'}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #2d5a27;">
-            <h3>${member.hName} & ${member.wName}</h3>
-            <p>📞 ${member.phone}</p>
-        </div>
-        <hr>
-        <div style="background:#f9f9f9; padding:10px; border-radius:8px;">
-            <h4 style="margin-top:0;">👨‍👩‍👧‍👦 የቤተሰብ አባላት</h4>
-            <ul style="list-style:none; padding:0; text-align:left;">${familyHtml}</ul>
-        </div>
-        <div style="margin-top:10px;">
-            ${member.idDoc ? `<a href="${member.idDoc}" target="_blank" style="color:#17a2b8; font-weight:bold; text-decoration:none;">📄 የመታወቂያ ኮፒ ይመልከቱ</a>` : ''}
-        </div>
-    `;
-
-    // 4. Inject into the Modal and show it
-    const modal = document.getElementById('global-modal');
-    const modalContent = document.getElementById('modal-content');
-    
-    if (modal && modalContent) {
-        modalContent.innerHTML = content;
-        modal.classList.add('active'); // This makes the modal visible
-    } else {
-        alert("ስህተት፡ Modal አልተገኘም!");
-    }
-};
-        function applyPermissions() {
-            const r = currentUser.role;
-            document.getElementById('nav-reg-box').style.display = (r === 'chairman' || r === 'secretary') ? 'flex' : 'none';
-            document.getElementById('nav-pay-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
-            document.getElementById('nav-pen-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
-            document.getElementById('nav-fin-box').style.display = (r === 'chairman' || r === 'finance') ? 'flex' : 'none';
-
- document.querySelectorAll('input, select, button').forEach(el => el.disabled = false);
-
-    if (r === 'chairman') {
-        // ከአንድሮይድ እና ከፒን መቀየሪያ ውጭ ያሉትን ኢንፑቶች ዝጋ
-        document.querySelectorAll('input, select').forEach(i => {
-            if (i.id !== 'lang-select' && i.id !== 'm-search' && i.id !== 'new-pin') {
-                i.disabled = true;
-            }
-        });
-
-        // አስፈላጊ የሆኑ በተኖችን ብቻ ክፍት አድርግ
-        document.querySelectorAll('button').forEach(b => {
-            const isControlBtn = b.innerText.includes('Approve') || 
-                                 b.innerText.includes('Reject') || 
-                                 b.id === 'pin-change-btn' || // አሁን በ ID ያገኘዋል
-                                 b.classList.contains('btn-info') || 
-                                 b.classList.contains('btn-success') ||
-                                 b.innerText.includes('Sign');
-            
-            if (!isControlBtn) {
-                b.disabled = true;
-            }
-        });
-    }
-}
-function startSync() {
-    // 1. Members Sync
-    window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
-        dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); 
-        renderMembers();
-    });
-
-    // 2. Finance Sync (For Approved Expenses)
-    window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
-        dbData.finance = snap.docs.map(d => ({id: d.id, ...d.data()})); 
-        updateStats(); 
-        updateStatusCounts(); // <--- ADDED: Triggers Approved counter
-    });
-
-    // 3. Workflow Sync (For Pending & Rejected)
-    window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
-        dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); 
-        renderWorkflow(); 
-        updateStatusCounts(); // <--- ADDED: Triggers Pending/Rejected counter
-    });
-}
-window.renderMembers = function() {
-    const tbody = document.getElementById('member-table-body');
-    const pSelect = document.getElementById('p-member-select');
-    const penSelect = document.getElementById('pen-member-select');
-    
-    if(!tbody) return; // Exit if table isn't on screen
-    
-    tbody.innerHTML = ""; 
-    if(pSelect) pSelect.innerHTML = ""; 
-    if(penSelect) penSelect.innerHTML = "";
-    
-    dbData.members.forEach(m => {
-        // We create the HTML for the buttons
-        const viewBtn = `<button class="btn-info" style="padding:5px 10px; margin-right:5px; border-radius:5px;" onclick="viewProfile('${m.id}')">👁️</button>`;
-        const editBtn = `<button class="btn-success" style="padding:5px 10px; margin-right:5px; border-radius:5px;" onclick="openEditModal('${m.id}')">✏️</button>`;
-        const delBtn = `<button class="btn-danger" style="padding:5px 10px; border-radius:5px;" onclick="deleteMember('${m.id}')">🗑️</button>`;
-        
-        tbody.innerHTML += `
-            <tr>
-                <td>${m.hName || 'Unknown'}</td>
-                <td>${m.status || 'Active'}</td>
-                <td>
-                    ${viewBtn} 
-                    <span class="admin-only">${editBtn} ${delBtn}</span>
-                </td>
-            </tr>`;
-        
-        if(pSelect) pSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
-        if(penSelect) penSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
-    });
-
-    // This ensures buttons hide/show based on who is logged in
-    if(window.applyPermissions) window.applyPermissions();
-};
-    window.showSection = function(id) {
-            document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
-            document.getElementById(`sec-${id}`).classList.remove('hidden');
-        };
-
-     
-// --- CORE LOGIC: INCOME (DIRECT) VS EXPENSE (WORKFLOW) ---
-
-        window.processPayment = async function() {
-            const mName = document.getElementById('p-member-select').options[document.getElementById('p-member-select').selectedIndex].text;
-            const amt = parseFloat(document.getElementById('p-amount').value);
-            const month = document.getElementById('p-month').value;
-            
-            // INCOME: No approval needed, save directly to finance
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
-                amt, reason: `መደበኛ ክፍያ: ${mName} (${month})`, type: 'income', date: new Date().toLocaleDateString()
-            });
-            alert("ክፍያው ተመዝግቧል!");
-        };
-
-        window.processPenalty = async function() {
-            const mName = document.getElementById('pen-member-select').options[document.getElementById('pen-member-select').selectedIndex].text;
-            const amt = parseFloat(document.getElementById('pen-amount').value);
-            const reason = document.getElementById('pen-reason').value;
-
-            // INCOME: No approval needed, save directly to finance
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
-                amt, reason: `ቅጣት: ${mName} (${reason})`, type: 'income', date: new Date().toLocaleDateString()
-            });
-            alert("ቅጣቱ ተመዝግቧል!");
-        };
-
-       window.addFinance = async function() {
-            const amt = parseFloat(document.getElementById('f-amt').value);
-            const type = document.getElementById('f-type').value;
-            const reason = document.getElementById('f-reason').value;
-
-            if(type === 'income') {
-                // Direct Save
-                await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
-                    amt, reason, type: 'income', date: new Date().toLocaleDateString()
-                });
-                alert("ገቢው ተመዝግቧል!");
-            } else {
-
-                // EXPENSE: Needs approval
-                await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
-                    amt, reason, type: 'expense', status: "pending_audit",
-                    audit1: false, audit2: false, submittedBy: currentUser.id, timestamp: new Date()
-                });
-                alert("የወጪ ጥያቄው ለኦዲት ተልኳል!");
-            }
-        };
-        window.addFinance = async function() {
-            const amt = parseFloat(document.getElementById('f-amt').value);
-            const type = document.getElementById('f-type').value;
-            const reason = document.getElementById('f-reason').value;
-            if(!amt || !reason) return alert("መረጃ ይሙሉ");
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), {
-                amt, reason, type, status: "pending_audit",
-                audit1: false, audit2: false, submittedBy: currentUser.id, timestamp: new Date()
-            });
-            alert("ለኦዲተሮች ተልኳል!");
-        };
-
-        window.auditSign = async function(id) {
-            const docRef = window.fb.doc(window.fb.db, "workflow", id);
-            const update = {};
-            if(currentUser.id === 'audit1') update.audit1 = true;
-            else if(currentUser.id === 'audit2') update.audit2 = true;
-            await window.fb.updateDoc(docRef, update);
-            const snap = await window.fb.getDoc(docRef);
-            if(snap.data().audit1 && snap.data().audit2) await window.fb.updateDoc(docRef, { status: "pending_chairman" });
-            alert("ተፈርሟል!");
-        };
-
-        window.finalApprove = async function(id) {
-            const docRef = window.fb.doc(window.fb.db, "workflow", id);
-            const snap = await window.fb.getDoc(docRef);
-            const data = snap.data();
-            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), {
-                amt: data.amt, reason: data.reason, type: data.type, date: new Date().toLocaleDateString()
-            });
-            await window.fb.deleteDoc(docRef);
-            alert("ጸድቋል!");
-        };
-
-        window.rejectWorkflow = async function(id) {
-            if(confirm("ይህንን መረጃ ውድቅ (Reject) ማድረግ ይፈልጋሉ?")) {
-                const docRef = window.fb.doc(window.fb.db, "workflow", id);
-                await window.fb.updateDoc(docRef, { status: "Rejected", rejectedBy: currentUser.id, rejectDate: new Date().toLocaleDateString() });
-                alert("መረጃው ውድቅ ተደርጓል!");
-            }
-        };
-
-        function renderWorkflow() {
-            const tbody = document.getElementById('workflow-table-body');
-            tbody.innerHTML = "";
-            dbData.workflow.forEach(w => {
-                let actionBtn = "";
-                if(w.status === 'pending_audit' && currentUser.role === 'auditor') {
-                    actionBtn = `<button class="btn btn-primary" style="padding:5px 10px; font-size:11px;" onclick="auditSign('${w.id}')">Sign</button>`;
-                }
-                if(w.status === 'pending_chairman' && currentUser.role === 'chairman') {
-                    actionBtn = `<button class="btn btn-info" style="padding:5px 10px; font-size:11px;" onclick="finalApprove('${w.id}')">Approve</button>
-                                 <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="rejectWorkflow('${w.id}')">Reject</button>`;
-                }
-                const statusDisplay = w.status === 'Rejected' ? `<span style="color:red; font-weight:bold;">Rejected</span>` : w.status;
-                tbody.innerHTML += `<tr><td>${w.reason}</td><td>${w.amt}</td><td>${statusDisplay}</td><td>${actionBtn}</td></tr>`;
-            });
-        }
-
-        function updateStats() {
-            const inc = dbData.finance.filter(f => f.type === 'income').reduce((s, a) => s + parseFloat(a.amt || 0), 0);
-            const exp = dbData.finance.filter(f => f.type === 'expense').reduce((s, a) => s + parseFloat(a.amt || 0), 0);
-            document.getElementById('total-m').innerText = dbData.members.length;
-            document.getElementById('total-inc').innerText = inc.toLocaleString();
-            document.getElementById('total-exp').innerText = exp.toLocaleString();
-            document.getElementById('net-bal').innerText = (inc - exp).toLocaleString();
-            if(myChart) { myChart.data.datasets[0].data = [inc, exp]; myChart.update(); }
-        }
-function updateStatusCounts() {
-    // 1. Pending: Count anything that IS NOT 'rejected' and IS NOT yet moved to finance
-    // This looks at the workflow collection
-    const pending = dbData.workflow.filter(w => 
-        w.status === 'pending_audit' || 
-        w.status === 'pending_chairman'
-    ).length;
-    
-    // 2. Approved: In an Iddir, an 'Approved' item is a successful 'Expense' 
-    // This looks at the finance collection
-    const approved = dbData.finance.filter(f => 
-        f.type === 'expense'
-    ).length;
-    
-    // 3. Rejected: Count items specifically marked 'rejected'
-    // This looks at the workflow collection
-    const rejected = dbData.workflow.filter(w => 
-        w.status === 'rejected'
-    ).length;
-
-    // Update the HTML Elements
-    const pEl = document.getElementById('stat-pending');
-    const aEl = document.getElementById('stat-approved');
-    const rEl = document.getElementById('stat-rejected');
-
-    if(pEl) pEl.innerText = pending;
-    if(aEl) aEl.innerText = approved;
-    if(rEl) rEl.innerText = rejected;
-    
-    console.log("Counts Updated:", { pending, approved, rejected });
-}
-        function initChart() {
-            const ctx = document.getElementById('paymentChart').getContext('2d');
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: { labels: ['ገቢ', 'ወጪ'], datasets: [{ data: [0, 0], backgroundColor: ['#28a745', '#e74c3c'] }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
-        function navTo(secId) { showSection(secId); toggleMenu(); }
-        function filterMembers() {
-            const input = document.getElementById('m-search').value.toLowerCase();
-            document.querySelectorAll('#member-table-body tr').forEach(row => { row.style.display = row.cells[0].innerText.toLowerCase().includes(input) ? '' : 'none'; });
-        }
-
-        window.exportToCSV = function() {
-            if (dbData.finance.length === 0) return alert("ምንም አይነት የፋይናንስ መረጃ የለም!");
-            const headers = ["Date", "Reason", "Type", "Amount"];
-            const rows = dbData.finance.map(f => [f.date || "-", `"${f.reason || '-'}"`, f.type || "-", f.amt || 0]);
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Fanuel_Iddir_Report.csv");
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        };
-
-        window.generatePDF = function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Fanuel Iddir Financial Report", 14, 15);
-            const rows = dbData.finance.map(f => [f.date || '-', f.reason || '-', f.type || '-', (f.amt || 0) + " ETB"]);
-            doc.autoTable({ head: [['Date', 'Reason', 'Type', 'Amount']], body: rows, startY: 20 });
-            doc.save("Finance_Report.pdf");
-        };
-
-        window.deleteMember = async function(id) { if(confirm("ይህ አባል ይጥፋ?")) await window.fb.deleteDoc(window.fb.doc(window.fb.db, "members", id)); };
-        
-        window.changePIN = async function() {
-            const newPin = document.getElementById('new-pin').value;
-            if(newPin.length < 4) return alert("PIN must be 4+ digits");
-            await window.fb.setDoc(window.fb.doc(window.fb.db, "users", currentUser.id), { pin: newPin }, { merge: true });
-            alert("PIN Updated! Please login again."); location.reload();
-        };
-
-        window.openEditModal = (id, hName, wName, phone) => {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-hName').value = hName;
-            document.getElementById('edit-wName').value = wName;
-            document.getElementById('edit-phone').value = phone;
-            document.getElementById('edit-modal').style.display = 'flex';
-        };
-        window.closeEditModal = () => { document.getElementById('edit-modal').style.display = 'none'; };
-        window.updateMember = async () => {
-            const id = document.getElementById('edit-id').value;
-            const ref = window.fb.doc(window.fb.db, "members", id);
-            await window.fb.updateDoc(ref, { hName: document.getElementById('edit-hName').value, wName: document.getElementById('edit-wName').value, phone: document.getElementById('edit-phone').value });
-            alert("ተስተካክሏል!"); closeEditModal();
-        };
-
-
-
 window.applyPermissions = function() {
-    if (!currentUser) return;
+    // 1. ተጠቃሚ መኖሩን እና Role እንዳለው ቼክ ማድረግ
+    if (!currentUser || !currentUser.role) {
+        console.warn("Permission Error: No user role detected.");
+        return;
+    }
 
     const role = currentUser.role.toLowerCase();
-    const adminElements = document.querySelectorAll('.admin-only');
+    console.log("Applying access for role:", role);
 
-    adminElements.forEach(el => {
-        // ONLY the secretary can see Edit/Delete buttons
-        if (role === 'secretary') {
-            el.style.display = 'inline-block'; 
-        } else {
-            el.style.display = 'none'; // Hidden for Chairman, Finance, and Auditors
+    // 2. በ HTML ላይ ያሉትን ሊገደቡ የሚችሉ ሜኑዎች (Restricted Menus) መያዝ
+    const menus = {
+        reg: document.getElementById('nav-reg-box'),
+        pay: document.getElementById('nav-pay-box'),
+        pen: document.getElementById('nav-pen-box'),
+        fin: document.getElementById('nav-fin-box')
+    };
+
+    // 3. መጀመሪያ ሁሉንም ደብቅ (Reset)
+    // ማሳሰቢያ፡ '!important' የምንጠቀመው በ CSS 'display:flex' ተሰጥቶት ከሆነ ለማሸነፍ ነው
+    Object.values(menus).forEach(menu => {
+        if (menu) {
+            menu.style.setProperty('display', 'none', 'important');
         }
     });
 
-    // Optional: Hide the entire Registration tab for non-secretaries
-    const regTab = document.getElementById('nav-reg');
-    if (regTab) {
-        regTab.style.display = (role === 'secretary') ? 'flex' : 'none';
+    // 4. በስልጣን (Role) መሰረት ሜኑዎቹን መፍቀድ
+    if ( role === 'chairman') {
+        // ሊቀመንበሩ ሁሉንም ማየት ይችላል
+        Object.values(menus).forEach(menu => {
+            if (menu) menu.style.setProperty('display', 'flex', 'important');
+        });
+    } 
+    else if (role === 'secretary') {
+        // ጸሐፊ አዲስ አባል መመዝገብ ብቻ ትችላለች
+        if (menus.reg) menus.reg.style.setProperty('display', 'flex', 'important');
+    } 
+    else if (role === 'finance') {
+        // ፋይናንስ ማናጀሩ ክፍያ፣ ቅጣት እና ገቢ/ወጪ ብቻ ያያል
+        if (menus.pay) menus.pay.style.setProperty('display', 'flex', 'important');
+        if (menus.pen) menus.pen.style.setProperty('display', 'flex', 'important');
+        if (menus.fin) menus.fin.style.setProperty('display', 'flex', 'important');
     }
+    
+    // 5. የአባላት ዝርዝር ውስጥ ያሉ 'አድሚን ብቻ' የሚነኳቸው በተኖች (Delete/Edit)
+    const canEdit = (role === 'chairman' || role === 'secretary');
+    document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = canEdit ? 'inline-block' : 'none';
+    });
 };
-window.handlePrint = function(id) {
-    var el = document.getElementById(id);
-    if (!el) return alert("ስህተት: የሚታተም መረጃ አልተገኘም");
+    // --- SYNC & RENDER ---
+    function startSync() {
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
+            dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            renderMembers(); updateStats();
+        });
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
+            dbData.finance = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            updateStats();
+        });
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
+            dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            renderWorkflow();
+        });
+    }
 
-    // Direct Raw Link for the Logo
-    var logoUrl = "https://github.com/SEID-FULLSTACK/Fanuel-iddir/blob/main/iddir-logo.png?raw=true";
+    window.renderMembers = function() {
+        const tbody = document.getElementById('member-table-body');
+        const pSelect = document.getElementById('p-member-select');
+        const penSelect = document.getElementById('pen-member-select');
+        if(!tbody) return;
+        tbody.innerHTML = ""; if(pSelect) pSelect.innerHTML = ""; if(penSelect) penSelect.innerHTML = "";
+        
+        dbData.members.forEach(m => {
+            tbody.innerHTML += `<tr>
+                <td>${m.hName || 'ያልታወቀ'}</td>
+                <td>${m.status || 'Active'}</td>
+                <td>
+                    <button class="btn-info" onclick="viewProfile('${m.id}')">👁️</button>
+                    <span class="admin-only">
+                        <button class="btn-success" onclick="openEditModal('${m.id}','${m.hName}','${m.wName}','${m.phone}')">✏️</button>
+                        <button class="btn-danger" onclick="deleteMember('${m.id}')">🗑️</button>
+                    </span>
+                </td>
+            </tr>`;
+            if(pSelect) pSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+            if(penSelect) penSelect.innerHTML += `<option value="${m.id}">${m.hName}</option>`;
+        });
+        applyPermissions();
+    };
 
-    // Safe Header Building (No backticks, no special characters)
-    var h = '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #00563b; padding-bottom:10px; margin-bottom:20px;">';
-    h += '<img id="print-logo" src="' + logoUrl + '" style="height:80px; width:auto;">';
-    h += '<div style="text-align:right; font-size:14px; font-weight:bold; color:#00563b; font-family:sans-serif;">';
-    h += 'ፋኑኤል ሳይት ፓርሴል 1 ረዳትና መረዳጃ ዕድር<br>ስልክ፡ 0942-472971 / 0911-443108<br>አዲስ አበባ፣ ኢትዮጵያ</div></div>';
+    // --- PROFILE VIEW ---
+    window.viewProfile = function(id) {
+        const m = dbData.members.find(x => x.id === id);
+        if(!m) return;
+        let famHtml = "";
+        (m.family || []).forEach(f => {
+            famHtml += `<li style="display:flex; align-items:center; gap:10px; padding:5px; border-bottom:1px solid #eee;">
+                <img src="${f.photoUrl || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;">
+                <div style="flex:1"><strong>${f.name}</strong> (${f.rel})</div>
+                ${f.idUrl ? `<a href="${f.idUrl}" target="_blank">🆔</a>` : ''}
+            </li>`;
+        });
+        const content = `<div style="text-align:center;">
+            <img src="${m.photo || 'https://via.placeholder.com/80'}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #2d5a27;">
+            <h3>${m.hName} & ${m.wName}</h3><p>📞 ${m.phone}</p>
+            <hr><div style="text-align:left; background:#f9f9f9; padding:10px; border-radius:8px;">
+                <h4>👨‍👩‍👧‍👦 ቤተሰብ</h4><ul style="list-style:none; padding:0;">${famHtml || "የለም"}</ul>
+            </div>
+            <div style="margin-top:10px;">${m.idDoc ? `<a href="${m.idDoc}" target="_blank" style="color:#17a2b8; font-weight:bold;">📄 መታወቂያ እይ</a>` : ''}</div>
+        </div>`;
+        const modal = document.getElementById('global-modal');
+        const modalContent = document.getElementById('modal-content');
+        if (modal && modalContent) { modalContent.innerHTML = content; modal.classList.add('active'); }
+    };
 
-    var w = window.open('', '_blank');
-    if (!w) return alert("እባክዎ Pop-up እንዲሰራ ይፍቀዱ");
+    // --- FINANCE LOGIC ---
+    window.processPayment = async function() {
+        const sel = document.getElementById('p-member-select');
+        const mName = sel.options[sel.selectedIndex].text;
+        const amt = parseFloat(document.getElementById('p-amount').value);
+        const month = document.getElementById('p-month').value;
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), { amt, reason: `ክፍያ: ${mName} (${month})`, type: 'income', date: new Date().toLocaleDateString() });
+        alert("ክፍያ ተመዝግቧል!");
+    };
 
-    // THE FIX: We break the closing tags so the browser doesn't crash
-    w.document.write('<html><head><title>Print</title>');
-    w.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ddd;padding:8px;}</style>');
-    w.document.write('</head><body>');
-    // We split the tags like "</" + "body>" so the browser doesn't get confused
-w.document.write(el.innerHTML);
-w.document.write("<" + "/body><" + "/html>");
-w.document.close();
-    w.document.close();
+    window.addFinance = async function() {
+        const amt = parseFloat(document.getElementById('f-amt').value);
+        const type = document.getElementById('f-type').value;
+        const reason = document.getElementById('f-reason').value;
+        if(type === 'income') {
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), { amt, reason, type, date: new Date().toLocaleDateString() });
+            alert("ገቢ ተመዝግቧል!");
+        } else {
+            await window.fb.addDoc(window.fb.collection(window.fb.db, "workflow"), { amt, reason, type, status: "pending_audit", audit1:false, audit2:false, submittedBy: currentUser.id });
+            alert("ለኦዲት ተልኳል!");
+        }
+    };
 
-    var img = w.document.getElementById('reportLogo');
+    function renderWorkflow() {
+        const tbody = document.getElementById('workflow-table-body');
+        if(!tbody) return; tbody.innerHTML = "";
+        dbData.workflow.forEach(w => {
+            let btn = "";
+            if(w.status === 'pending_audit' && currentUser.role === 'auditor') btn = `<button onclick="auditSign('${w.id}')">ፈርም</button>`;
+            if(w.status === 'pending_chairman' && currentUser.role === 'chairman') btn = `<button onclick="finalApprove('${w.id}')">አጽድቅ</button>`;
+            tbody.innerHTML += `<tr><td>${w.reason}</td><td>${w.amt}</td><td>${w.status}</td><td>${btn}</td></tr>`;
+        });
+    }
 
-var proceedToPrint = function() {
-    w.focus();
-    w.print();
-    w.close();
-};
+    window.auditSign = async function(id) {
+        const ref = window.fb.doc(window.fb.db, "workflow", id);
+        const up = {}; if(currentUser.id === 'audit1') up.audit1 = true; else up.audit2 = true;
+        await window.fb.updateDoc(ref, up);
+        const s = await window.fb.getDoc(ref);
+        if(s.data().audit1 && s.data().audit2) await window.fb.updateDoc(ref, {status: "pending_chairman"});
+        alert("ተፈርሟል!");
+    };
 
-if (img.complete) {
-    proceedToPrint(); // If logo is already in memory
-} else {
-    img.onload = proceedToPrint; // Wait for logo to download
-    img.onerror = proceedToPrint; // Print anyway if logo fails
-    setTimeout(proceedToPrint, 3000); // Safety timeout (3 seconds)
-}
-};
-  </script>
+    window.finalApprove = async function(id) {
+        const ref = window.fb.doc(window.fb.db, "workflow", id);
+        const s = await window.fb.getDoc(ref);
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "finance"), { amt: s.data().amt, reason: s.data().reason, type: 'expense', date: new Date().toLocaleDateString() });
+        await window.fb.deleteDoc(ref); alert("ጸድቋል!");
+    };
+
+    // --- UTILS ---
+    window.showSection = function(id) { document.querySelectorAll('.content').forEach(c => c.classList.add('hidden')); document.getElementById(`sec-${id}`).classList.remove('hidden'); };
+    window.changeLanguage = function() {
+        const t = translations[document.getElementById('lang-select').value];
+        document.querySelectorAll('[data-key]').forEach(el => { const k = el.getAttribute('data-key'); if(t[k]) el.innerText = t[k]; });
+    };
+    function updateStats() {
+        const inc = dbData.finance.filter(f => f.type === 'income').reduce((s, a) => s + (a.amt || 0), 0);
+        const exp = dbData.finance.filter(f => f.type === 'expense').reduce((s, a) => s + (a.amt || 0), 0);
+        document.getElementById('total-m').innerText = dbData.members.length;
+        document.getElementById('total-inc').innerText = inc.toLocaleString();
+        document.getElementById('total-exp').innerText = exp.toLocaleString();
+        document.getElementById('net-bal').innerText = (inc - exp).toLocaleString();
+        if(myChart) { myChart.data.datasets[0].data = [inc, exp]; myChart.update(); }
+    }
+    function initChart() {
+        const ctx = document.getElementById('paymentChart').getContext('2d');
+        myChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['ገቢ', 'ወጪ'], datasets: [{ data: [0, 0], backgroundColor: ['#28a745', '#e74c3c'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+    }
+    window.applyPermissions = function() {
+        if(!currentUser) return;
+        const isSec = currentUser.role.toLowerCase() === 'secretary';
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = isSec ? 'inline-block' : 'none');
+        if(document.getElementById('nav-reg')) document.getElementById('nav-reg').style.display = isSec ? 'flex' : 'none';
+    };
+    window.deleteMember = async function(id) { if(confirm("ይጥፋ?")) await window.fb.deleteDoc(window.fb.doc(window.fb.db, "members", id)); };
+    window.openEditModal = (id, h, w, p) => { 
+        document.getElementById('edit-id').value = id; document.getElementById('edit-hName').value = h; 
+        document.getElementById('edit-wName').value = w; document.getElementById('edit-phone').value = p;
+        document.getElementById('edit-modal').style.display = 'flex'; 
+    };
+    window.closeEditModal = () => document.getElementById('edit-modal').style.display = 'none';
+    window.updateMember = async () => {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "members", document.getElementById('edit-id').value), { hName: document.getElementById('edit-hName').value, wName: document.getElementById('edit-wName').value, phone: document.getElementById('edit-phone').value });
+        alert("ተስተካክሏል!"); closeEditModal();
+    };
+// --- የጎን ሜኑ (Hamburger Menu) ለመክፈትና ለመዝጋት ---
+    window.toggleMenu = function() {
+        const sideMenu = document.getElementById('side-menu');
+        const overlay = document.getElementById('overlay');
+        if (sideMenu && overlay) {
+            sideMenu.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+    };
+
+    // --- ሜኑ ሲነካ ወደሚፈለገው ሴክሽን ለመሄድ ---
+    window.navTo = function(secId) {
+        showSection(secId);
+        toggleMenu(); // ሜኑው እንዲዘጋ
+    };
+
+    // --- Dashboard ላይ ያሉትን Pending, Approved, Rejected ብዛት ለማሳየት ---
+    function updateStatusCounts() {
+        // Pending: ኦዲት ያልተደረጉ እና ለሊቀመንበር የቀረቡ
+        const pending = dbData.workflow.filter(w => w.status === 'pending_audit' || w.status === 'pending_chairman').length;
+        
+        // Approved: ከወርክፍሎው ወጥተው ወደ ፋይናንስ የገቡ (Expense የሆኑ)
+        const approved = dbData.finance.filter(f => f.type === 'expense').length;
+        
+        // Rejected: ውድቅ የተደረጉ
+        const rejected = dbData.workflow.filter(w => w.status === 'Rejected' || w.status === 'rejected').length;
+
+        // በየካርዱ ላይ ዳታውን መጫን
+        if(document.getElementById('stat-pending')) document.getElementById('stat-pending').innerText = pending;
+        if(document.getElementById('stat-approved')) document.getElementById('stat-approved').innerText = approved;
+        if(document.getElementById('stat-rejected')) document.getElementById('stat-rejected').innerText = rejected;
+    }
+
+    // --- ዳታው ሲቀየር ካውንቶቹም እንዲቀየሩ startSync ላይ ይሄን ጨምር ---
+    // (ማሳሰቢያ፡ ይሄ ቀድሞ ካለህ startSync ውስጥ updateStatusCounts(); የሚለውን መስመር ብቻ ጨምር)
+    function startSync() {
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "members"), snap => {
+            dbData.members = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            renderMembers(); updateStats();
+        });
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "finance"), snap => {
+            dbData.finance = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            updateStats(); updateStatusCounts(); // እዚህ ጋር ተጨምሯል
+        });
+        window.fb.onSnapshot(window.fb.collection(window.fb.db, "workflow"), snap => {
+            dbData.workflow = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+            renderWorkflow(); updateStatusCounts(); // እዚህ ጋር ተጨምሯል
+        });
+    }
+</script>
+ 
+ 
    </body>
 </html>
+
+
+
+

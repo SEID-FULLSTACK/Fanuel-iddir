@@ -27,10 +27,10 @@
         window.fb = { db, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, setDoc, getDoc };
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --primary: #2d5a27; --secondary: #800080; --bg: #f4f7f6; --danger: #e74c3c; --warning: #f1c40f; }
         * { box-sizing: border-box; font-family: 'Segoe UI', 'Abyssinica SIL', sans-serif; }
@@ -113,6 +113,231 @@ input:disabled, select:disabled, textarea:disabled {
 .inputer-only.hidden-btn {
     display: none !important;
 }
+/* "አሳይ" በተን - ሰማያዊ መልክ */
+.btn-show {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ለአይኮን እና ለጽሁፍ መራራቂያ */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-show:hover {
+    background-color: #28a745;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* "ፒዲኤፍ አውርድ" በተን - ቀይ/ደማቅ መልክ */
+.btn-pdf {
+    background-color: #800080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ለአይኮን እና ለጽሁፍ መራራቂያ */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-pdf:hover {
+    background-color: #800080;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* በተኑ ሲጫን (Click ሲደረግ) */
+.btn-show:active, .btn-pdf:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ለሞባይል ስክሪን ማስተካከያ */
+@media (max-width: 480px) {
+    .btn-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-show, .btn-pdf {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* የኤክሴል ማውረጃ በተን ስታይል */
+.btn-success {
+    background-color: #1D6F42; /* የኤክሴል ኦሪጅናል አረንጓዴ ቀለም */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* ለአይኮን እና ለጽሁፍ መራራቂያ */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* በተኑ ላይ ማውሱ ሲያርፍ (Hover) */
+.btn-success:hover {
+    background-color: #155130; /* ትንሽ ጠቆር ያለ አረንጓዴ */
+    transform: translateY(-2px); /* ወደ ላይ ከፍ እንዲል */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* በተኑ ሲጫን (Click) */
+.btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* አይኮን ለመጨመር ከፈለግህ (ምርጫ ነው) */
+.btn-success::before {
+    content: '📊'; /* የኤክሴል ምልክት ወይም አይኮን */
+    font-size: 18px;
+}
+/* 1. በዌብ ገጹ ላይ ዳታው ሲበዛ እንዲሸበለል (Scroll) */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    max-height: 70vh; 
+    overflow-y: auto; 
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+/* 2. ሠንጠረዡ ሙሉ ስፋት እንዲኖረው */
+#paymentTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* አምዶቹ እንዳይጨናነቁ */
+}
+
+/* 3. ጠቅላላ ገቢ የሚለው ክፍል እንዳይቆረጥ */
+#totalAmountContainer {
+    padding: 15px 0;
+    clear: both;
+}
+
+/* በዌብ ገጹ ላይ ሲታይ */
+#printableReport {
+    padding: 30px;
+    background: white;
+    max-width: 900px;
+    margin: 20px auto;
+    border: 1px solid #eee;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.report-header { text-align: center; margin-bottom: 3px; }
+.report-header h2 { color: #2c3e50; margin-bottom: 5px; }
+.report-footer { margin-top: 40px; }
+.signature-area { display: flex; justify-content: space-between; margin-top: 50px; }
+.dev-tag { font-size: 10px; color: #999; text-align: center; margin-top: 30px; }
+
+/* ለፒዲኤፍ/ለህትመት ብቻ የሚሆን (Professional Mode) */
+@media print {
+    body * { visibility: hidden; } /* ሁሉንም ደብቅ */
+    
+    #printableReport, #printableReport * { 
+        visibility: visible; 
+    }
+    
+   #printableReport {
+        margin: 0 !important;
+        padding: 0 !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 210mm;
+    }
+
+
+    table {
+        width: 210mm;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th {
+        background-color: #f8f9fa !important;
+        border-bottom: 2px solid #333 !important;
+        padding: 12px;
+        font-family: "Nyala", sans-serif;
+    }
+
+    td {
+        border-bottom: 1px solid #eee !important;
+        padding: 10px;
+        font-family: "Nyala", sans-serif;
+    }
+
+    /* አላስፈላጊ የብሮውዘር ጽሁፎች (URL, Date) እንዳይታዩ */
+    @page { margin: 15mm; }
+}
+
+.signature-area {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px; /* ከሰንጠረዡ ትንሽ ራቅ እንዲል */
+    padding: 20px;
+    width: 100%;
+}
+
+.sig-box {
+    text-align: center;
+    flex: 1;
+}
+
+.sig-box p {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.sig-box span {
+    font-size: 12px;
+    color: #666;
+}
+
+/* ፒዲኤፍ ሲወጣ ፊርማው በመሃል እንዳይቆረጥ */
+@media print {
+    .signature-area {
+        page-break-inside: avoid;
+    }
+}
+
+/* ሠንጠረዡ ከርዕሱ ዝቅ ብሎ እንዲጀምር */
+#paymentTable {
+    width: 100%;
+    margin-top: 20px; 
+    border-collapse: collapse;
+}
+.cover-page {
+    page-break-after: always; /* ከምስሉ በኋላ ገጽ እንዲሰበር ያደርጋል */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.report-content {
+    margin-top: 0 !important;
+    padding-top: 10mm !important; /* በሁለተኛው ገጽ አናት ላይ ትንሽ ክፍተት እንዲኖር */
+}
+
 
     </style>
 </head>
@@ -127,6 +352,7 @@ input:disabled, select:disabled, textarea:disabled {
         <div class="menu-item" onclick="navTo('list')" data-key="list">📋 የአባላት ዝርዝር</div>
         <div class="menu-item" id="nav-reg-box" onclick="navTo('reg')" data-key="reg">👤 አዲስ አባል</div>
         <div class="menu-item" id="nav-pay-box" onclick="navTo('pay')" data-key="pay">💳 ክፍያ</div>
+         <div class="menu-item" onclick="navTo('history')" data-key="history">📜 የክፍያ ዝርዝር</div> 
         <div class="menu-item" id="nav-pen-box" onclick="navTo('pen')" data-key="pen">⚖️ ቅጣት</div>
         <div class="menu-item" id="nav-fin-box" onclick="navTo('fin')" data-key="fin">📊 ገቢ/ወጪ</div>
         <div class="menu-item" onclick="navTo('workflow')" data-key="appr">🔔 ፍቃድ</div>
@@ -197,10 +423,7 @@ input:disabled, select:disabled, textarea:disabled {
                 <div class="card">
                     <canvas id="paymentChart" style="max-height: 250px;"></canvas>
                 </div>
-                <div class="card" style="display: flex; gap: 10px;">
-                    <button class="btn btn-info" onclick="generatePDF()" data-key="pdfBtn">PDF Report</button>
-                    <button class="btn btn-success" onclick="exportToCSV()" data-key="csvBtn">Export Excel (CSV)</button>
-                </div>
+                
             </div>
 
             <div id="sec-list" class="content hidden">
@@ -286,6 +509,126 @@ input:disabled, select:disabled, textarea:disabled {
                     <button class="btn btn-primary inputer-only" onclick="addFinance()" data-key="finBtn">ለኦዲት ላክ (Submit)</button>
                 </div>
             </div>
+
+    <div class="main-container">
+    <div class="filter-section" id="filterArea">
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label>የአባል ስም</label>
+                <select id="nameFilter">
+                    <option value="all">ሁሉንም አባላት</option>
+                </select>
+            </div>
+
+             <div class="filter-group">
+                <label>ከመቼ (ወር/ዓ.ም)</label>
+                <div class="range-container">
+                    <select id="startMonth">
+                        <option value="1">መስከረም</option><option value="2">ጥቅምት</option><option value="3">ህዳር</option>
+                        <option value="4">ታህሳስ</option><option value="5">ጥር</option><option value="6">የካቲት</option>
+                        <option value="7">መጋቢት</option><option value="8">ሚያዝያ</option><option value="9">ግንቦት</option>
+                        <option value="10">ሰኔ</option><option value="11">ሐምሌ</option><option value="12">ነሐሴ</option>
+                    </select>
+                    <select id="startYear" class="yearSelect"></select>
+           
+                </div>
+            </div>
+
+             <div class="filter-group">
+                <label>እስከመቼ (ወር/ዓ.ም)</label>
+                <div class="range-container">
+                    <select id="endMonth">
+                        <option value="1">መስከረም</option><option value="2">ጥቅምት</option><option value="3">ህዳር</option>
+                        <option value="4">ታህሳስ</option><option value="5">ጥር</option><option value="6">የካቲት</option>
+                        <option value="7">መጋቢት</option><option value="8">ሚያዝያ</option><option value="9">ግንቦት</option>
+                        <option value="10">ሰኔ</option><option value="11">ሐምሌ</option><option value="12" selected>ነሐሴ</option>
+                    </select>
+                    <select id="endYear" class="yearSelect"></select>
+           
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>ሁኔታ (Status)</label>
+                <select id="statusFilter">
+                    <option value="all">ሁሉንም</option>
+                    <option value="Paid">ተከፍሏል</option>
+                    <option value="Pending">ያልተከፈለ</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button id="showBtn" class="btn-show">🔍 አሳይ</button>
+            <button id="downloadPDF" class="btn-pdf">📥 ፒዲኤፍ አውርድ</button>
+            <button id="downloadExcel" class="btn-success">Excel አውርድ</button>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="displayTable">
+            <thead>
+                <tr>
+                    <th>ተ.ቁ</th>
+                    <th>Member Name</th>
+                    <th>ቀን እና ወር</th>
+                    <th>የክፍያ አይነት</th>
+                    <th>የክፍያ መጠን</th>
+                    <th>የክፍያ ምክንያት</th>
+                    <th>ሁኔታ</th>
+                </tr>
+            </thead>
+            <tbody id="paymentData"></tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 20px; font-weight: bold; text-align: right;">
+        ጠቅላላ ገቢ፡ <span id="totalAmount">0</span> ብር
+    </div>
+
+   <div id="printableReport" style="background: white; width: 100%;">
+    
+    <div class="cover-page" style="width: 100%; text-align: center;">
+        <img src="cover-page.jpg" style="width: 100%; height: auto; display: block;">
+        <div style="page-break-after: always;"></div> 
+    </div>
+
+    <div class="report-content" style="padding: 30px;">
+        <div style="text-align: center; margin-bottom: 20px; font-size: 18px;">
+           <strong>የክፍያ ሪፖርት</strong><br>
+            ወር: <span id="selectedMonthDisplay">---</span> | ዓ.ም: <span id="selectedYearDisplay">---</span>
+        </div> 
+ <table id="paymentTable" style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
+            <thead>
+                <tr>
+                    <th>ተ.ቁ</th>
+                    <th>የአባል ስም</th>
+                    <th>ቀን እና ወር</th>
+                    <th>የክፍያ አይነት</th>
+                    <th>የክፍያ መጠን</th>
+                    <th>የክፍያ ምክንያት</th>
+                    <th>ሁኔታ</th>
+                </tr>
+            </thead>
+            <tbody id="reportTableBody">
+                </tbody>
+        </table>
+
+        <div class="signature-area" style="display: flex; justify-content: space-between; margin-top: 50px;">
+            <div class="sig-box" style="text-align: center;">
+                <p>ያዘጋጀው፡ ________________</p>
+                <span>ፊርማ</span>
+            </div>
+            <div class="sig-box" style="text-align: center;">
+                <p>የገንዘብ ያዥ ፊርማ፡ ________________</p>
+                <span>ፊርማ</span>
+            </div>
+            <div class="sig-box" style="text-align: center;">
+                <p>የሰብሳቢ ፊርማ፡ ________________</p>
+                <span>ፊርማ</span>
+            </div>
+        </div>
+    </div> </div>
 
             <div id="sec-workflow" class="content hidden">
                 <div class="card">
@@ -721,12 +1064,191 @@ window.applyPermissions = function() {
             renderWorkflow(); updateStatusCounts(); // እዚህ ጋር ተጨምሯል
         });
     }
+document.addEventListener('DOMContentLoaded', () => {
+    const yearSelects = document.querySelectorAll('.yearSelect');
+    yearSelects.forEach(select => {
+        select.innerHTML = "";
+        for (let year = 2018; year <= 2030; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === 2025) option.selected = true;
+            select.appendChild(option);
+        }
+    });
+
+    // ዳታው ከ Firebase እስኪጫን 1 ሰከንድ ጠብቆ አባላትን ይሞላል
+    setTimeout(() => {
+        if (window.dbData && dbData.members) renderMembers();
+    }, 1000);
+});
+
+// 1. ማጣሪያውን ገጹ ሲጫን አንድ ጊዜ ብቻ መጫን
+document.getElementById('nameFilter').addEventListener('change', function() {
+    const selectedName = this.value;
+    
+    // ዳታው መኖሩን ማረጋገጥ
+    if (!dbData || !dbData.payments) return;
+    
+    let allPayments = dbData.payments;
+
+    if (selectedName === "all") {
+        renderReportTable(allPayments);
+    } else {
+        const filteredData = allPayments.filter(p => {
+            // ስሙን በንጽህና ማግኘት (Reason ውስጥ ካለ)
+            let pName = p.memberName || p.reason || "";
+            
+            // NaN ስህተት ያለባቸውን ዳታዎች እዚህ ጋር ማስተካከል ይቻላል
+            if (isNaN(parseFloat(p.amt))) p.amt = 0; 
+            
+            return pName.toLowerCase().includes(selectedName.toLowerCase());
+        });
+        
+        renderReportTable(filteredData);
+    }
+});
+// 2. "አሳይ" (Show) ሲጫን የሚሰራው ማጣሪያ
+document.getElementById('showBtn')?.addEventListener('click', () => {
+    const tableBody = document.getElementById('paymentData');
+    const selectedName = document.getElementById('nameFilter').value;
+    
+    // በኮንሶል ያየኸውን ዳታ መሰረት ያደረገ ማጣሪያ
+    const filtered = dbData.finance.filter(f => {
+        const isIncome = f.type === 'income';
+        
+        // በዳታህ ውስጥ ስሙ ያለው 'reason' ውስጥ ስለሚመስል እሱን ቼክ እናደርጋለን
+        const nameToMatch = f.memberName || f.reason || "";
+        const matchName = (selectedName === 'all' || nameToMatch.includes(selectedName));
+        
+        return isIncome && matchName;
+    });
+
+    renderReportTable(filtered);
+});
+
+// 3. ሰንጠረዡን መሙያ (ይህ ክፍል አሁን በፈንክሽን ውስጥ ተካቷል - ERROR FIX)
+function renderReportTable(financeData) {
+    const tableBody = document.getElementById('paymentData');
+    const totalDisplay = document.getElementById('totalAmount');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = financeData.length ? "" : "<tr><td colspan='7'>ምንም መረጃ አልተገኘም</td></tr>";
+    let total = 0;
+
+    financeData.forEach((p, i) => {
+        // 1. የክፍያ ሁኔታ (Status) - ዳታው ላይ 'status' ካለ እሱን ይጠቀማል
+        // ካልሆነ በገንዘቡ መጠን (amt > 0) ከፍሏል ይላል
+        const isPaid = (p.status === 'Paid' || p.status === 'ከፍሏል' || Number(p.amt) > 0);
+        const statusText = isPaid ? "ከፍሏል" : "አልከፈለም";
+        const statusClass = isPaid ? "badge paid" : "badge pending"; // CSS ላይ pending ቀይ እንዲሆን
+
+        // 2. የክፍያ አይነት (Payment Type)
+        // 'paymentType' የሚል ካለ እሱን፣ ካልሆነ 'reason' ውስጥ ያለውን ፈልጎ 'መደበኛ' ይላል
+        let pType = p.paymentType || "መደበኛ";
+        if (p.reason && p.reason.toLowerCase().includes("ቅጣት")) pType = "ቅጣት";
+        if (p.reason && p.reason.toLowerCase().includes("ልዩ")) pType = "ልዩ ክፍያ";
+
+        // 3. ስሙን ብቻ ለይቶ ማውጫ (ከዚህ በፊት የሰራነው)
+        let rawName = p.memberName || p.reason || "ያልታወቀ";
+        let cleanName = rawName.includes(":") ? rawName.split(":")[1].split("(")[0].trim() : rawName.split("(")[0].trim();
+
+        total += Number(p.amt || 0);
+
+        tableBody.innerHTML += `<tr>
+            <td>${i + 1}</td>
+            <td style="text-align:left; font-weight:bold;">${cleanName}</td>
+            <td>${p.date || '-'}</td>
+            <td>${p.month || p.monthVal || '-'}</td>
+            <td style="color:green; font-weight:bold;">${Number(p.amt).toLocaleString()} ETB</td>
+            <td>${pType}</td>
+            <td><span class="${statusClass}">${statusText}</span></td>
+        </tr>`;
+    });
+    
+    if (totalDisplay) totalDisplay.innerText = total.toLocaleString();
+}
+document.getElementById('showBtn')?.addEventListener('click', () => {
+    // ... የእርስዎ ዳታ የመጫኛ ኮድ እዚህ ይኖራል ...
+    
+    // ዳታውን ወደ ሪፖርቱ ሰንጠረዥ (printableReport) መገልበጥ
+    const displayData = document.getElementById('paymentData').innerHTML;
+    const reportTableBody = document.getElementById('reportTableBody');
+    
+    if (reportTableBody) {
+        reportTableBody.innerHTML = displayData; // ዳታውን ወደ ሪፖርቱ ያስገባል
+    }
+});
+
+document.getElementById('downloadPDF')?.addEventListener('click', () => {
+    const element = document.getElementById('printableReport');
+    const tableBody = document.getElementById('reportTableBody');
+
+    // ሀ. ዳታ መኖሩን ማረጋገጥ (ሪፖርቱ ባዶ ሆኖ እንዳይወርድ)
+    if (!tableBody || tableBody.rows.length === 0) {
+        alert("እባክዎ መጀመሪያ ዳታውን ያሳዩ!");
+        return;
+    }
+
+    // ለ. ወር እና ዓመት መሙላት (ከቁጥር ይልቅ ስሙን መውሰድ)
+    const monthInput = document.getElementById('startMonth');
+    const yearInput = document.getElementById('startYear');
+    const monthDisplay = document.getElementById('selectedMonthDisplay');
+    const yearDisplay = document.getElementById('selectedYearDisplay');
+
+    if (monthInput && monthDisplay) {
+        monthDisplay.innerText = monthInput.options[monthInput.selectedIndex].text;
+    }
+    if (yearInput && yearDisplay) {
+        yearDisplay.innerText = yearInput.value;
+    }
+
+    // ሐ. NaN ስህተትን ማጽዳት
+    const cells = element.querySelectorAll('td');
+    cells.forEach(cell => {
+        if (cell.innerText.includes('NaN')) {
+            cell.innerText = '0 ETB';
+        }
+    });
+
+    // መ. የሪፖርቱ Settings
+    /*const options = {
+        margin: [10, 10, 10, 10],
+        filename: `Fanuel_Iddir_Report_${monthDisplay.innerText}.pdf`,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            scrollY: 0, 
+            scrollX:0,
+            windowHeight: element.scrollHeight // ሙሉውን ፊርማ እንዲያካትት
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+*/
+const options = {
+    margin: 0,
+    filename: 'Fanuel_Iddir_Official_Report.pdf',
+    image: { type: 'jpeg', quality: 1.0 },
+    html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        scrollY: 0, // ብሮውዘሩ ባለበት ቦታ እንዳይጀምር
+        
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    // የገጽ አከፋፈልን በትክክል ለመቆጣጠር
+    pagebreak: { mode: 'css', before: '.pdf-page' }
+};
+    // ሠ. ማውረድ
+    html2pdf().set(options).from(element).save();
+});
 </script>
  
  
    </body>
 </html>
-
 
 
 
